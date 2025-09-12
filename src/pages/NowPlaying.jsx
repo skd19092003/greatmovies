@@ -22,7 +22,7 @@ export default function NowPlaying() {
 
         const apiResults = Array.isArray(data.results) ? data.results : []
         const apiTotal = typeof data.total_pages === 'number' ? data.total_pages : 1
-        const cappedTotalPages = Math.min(apiTotal, 10)
+        const cappedTotalPages = Math.min(apiTotal, 20)
 
         let results = apiResults
         if (results.length === 20 && page < cappedTotalPages) {
