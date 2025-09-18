@@ -10,7 +10,7 @@ export default function AllTimeGreatest() {
   const [error, setError] = useState('')
   const [reloadTick, setReloadTick] = useState(0)
 
-  // Cap total pages to 25 to roughly show up to 500 movies (20 per page)
+  // Cap total pages to 30 to roughly show up to 600 movies (20 per page)
   const pageCap = 30
 
   const clampedPage = useMemo(() => Math.max(1, Math.min(page, totalPages)), [page, totalPages])
@@ -40,7 +40,7 @@ export default function AllTimeGreatest() {
             }
           } catch { /* ignore */ }
         }
-        results = results.slice(0, 24)
+        results = results.slice(0,20)
 
         setMovies(results)
         setTotalPages(cappedTotalPages)
