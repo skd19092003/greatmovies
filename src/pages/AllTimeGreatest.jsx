@@ -63,12 +63,9 @@ export default function AllTimeGreatest() {
       // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clampedPage])
 
-  // Scroll to grid top on page change (parity with Home)
+  // Scroll to window top on page change
   useEffect(() => {
-    const el = document.getElementById('movie-box')
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [page])
 
   const canPrev = page > 1
