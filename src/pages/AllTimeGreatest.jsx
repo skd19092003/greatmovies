@@ -125,18 +125,7 @@ export default function AllTimeGreatest() {
               <span className="page-link">Page {page} of {totalPages}</span>
             </li>
             {/* Jump to middle page (10) when available */}
-            <li
-              className={`page-item ${totalPages < 10 ? 'd-none' : page === 10 ? 'active' : ''}`}
-              title="Jump to page 10"
-            >
-              <button
-                className="page-link"
-                onClick={() => totalPages >= 0 && setPage(1)}
-                aria-label="Jump to page 10"
-              >
-                1
-              </button>
-            </li>
+            
             <li
               className={`page-item ${totalPages < 10 ? 'd-none' : page === 10 ? 'active' : ''}`}
               title="Jump to page 10"
@@ -149,18 +138,7 @@ export default function AllTimeGreatest() {
                 10
               </button>
             </li>
-            <li
-              className={`page-item ${totalPages < 10 ? 'd-none' : page === 10 ? 'active' : ''}`}
-              title="Jump to page 10"
-            >
-              <button
-                className="page-link"
-                onClick={() => totalPages >= 30 && setPage(30)}
-                aria-label="Jump to page 10"
-              >
-                30
-              </button>
-            </li>
+            
             <li className={`page-item ${!canNext ? 'disabled' : ''}`}>
               <button className="page-link" onClick={() => canNext && setPage(p => p + 1)} aria-label="Next">&raquo;</button>
             </li>
