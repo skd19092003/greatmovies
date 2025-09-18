@@ -137,13 +137,11 @@ export default function Home() {
   // Reset page when criteria change
   useEffect(() => { setPage(1) }, [debouncedQuery, genre, year, sort])
 
-  // Scroll to grid top on page change for parity with legacy UX
+  // Scroll to grid top on page change
   useEffect(() => {
-    const el = document.getElementById('movie-box')
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [page])
+
 
   // Persist discover state to localStorage (legacy parity)
   useEffect(() => {
