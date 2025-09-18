@@ -11,7 +11,7 @@ export default function AllTimeGreatest() {
   const [reloadTick, setReloadTick] = useState(0)
 
   // Cap total pages to 25 to roughly show up to 500 movies (20 per page)
-  const pageCap = 25
+  const pageCap = 30
 
   const clampedPage = useMemo(() => Math.max(1, Math.min(page, totalPages)), [page, totalPages])
 
@@ -40,7 +40,7 @@ export default function AllTimeGreatest() {
             }
           } catch { /* ignore */ }
         }
-        results = results.slice(0, 21)
+        results = results.slice(0, 24)
 
         setMovies(results)
         setTotalPages(cappedTotalPages)
@@ -131,10 +131,34 @@ export default function AllTimeGreatest() {
             >
               <button
                 className="page-link"
+                onClick={() => totalPages >= 0 && setPage(1)}
+                aria-label="Jump to page 10"
+              >
+                1
+              </button>
+            </li>
+            <li
+              className={`page-item ${totalPages < 10 ? 'd-none' : page === 10 ? 'active' : ''}`}
+              title="Jump to page 10"
+            >
+              <button
+                className="page-link"
                 onClick={() => totalPages >= 10 && setPage(10)}
                 aria-label="Jump to page 10"
               >
                 10
+              </button>
+            </li>
+            <li
+              className={`page-item ${totalPages < 10 ? 'd-none' : page === 10 ? 'active' : ''}`}
+              title="Jump to page 10"
+            >
+              <button
+                className="page-link"
+                onClick={() => totalPages >= 30 && setPage(30)}
+                aria-label="Jump to page 10"
+              >
+                30
               </button>
             </li>
             <li className={`page-item ${!canNext ? 'disabled' : ''}`}>
