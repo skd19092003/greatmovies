@@ -54,12 +54,9 @@ export default function Trending() {
     return () => { ignore = true; controller.abort() }
   }, [page, reloadTick, windowSize])
 
-  // Scroll to grid top on page change (parity with Home)
+ // Scroll to window top on page change
   useEffect(() => {
-    const el = document.getElementById('movie-box')
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [page])
 
   const canPrev = page > 1
@@ -106,33 +103,38 @@ export default function Trending() {
         ))}
       </div>
 
-      <div id="pagination-container" className="d-flex justify-content-center mt-4">
-        <nav aria-label="Trending pagination">
-          <ul className="pagination">
+      {/* Pagination */}
+      <div className="d-flex flex-column align-items-center mt-4">
+        <nav aria-label="Movie pagination">
+          <ul className="pagination mb-2">
             <li className={`page-item ${!canPrev ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={() => canPrev && setPage(p => p - 1)} aria-label="Previous">&laquo;</button>
+              <button className="page-link" onClick={() => canPrev && setPage(p => p - 1)}>&laquo;</button>
             </li>
-            <li className="page-item disabled">
-              <span className="page-link">Page {page} of {totalPages}</span>
+            
+            <li className={`page-item ${page === 1 ? 'active' : ''}`}>
+              <button className="page-link" onClick={() => setPage(1)}>1</button>
             </li>
-            {/* Jump to middle page (10) when available */}
-            <li
-              className={`page-item ${totalPages < 10 ? 'd-none' : page === 10 ? 'active' : ''}`}
-              title="Jump to page 10"
-            >
-              <button
-                className="page-link"
-                onClick={() => totalPages >= 10 && setPage(10)}
-                aria-label="Jump to page 10"
-              >
-                10
-              </button>
-            </li>
+            
+            {totalPages >= 10 && (
+              <li className={`page-item ${page === 10 ? 'active' : ''}`}>
+                <button className="page-link" onClick={() => setPage(10)}>10</button>
+              </li>
+            )}
+            
+            {totalPages >= 20 && (
+              <li className={`page-item ${page === 20 ? 'active' : ''}`}>
+                <button className="page-link" onClick={() => setPage(20)}>20</button>
+              </li>
+            )}
+            
             <li className={`page-item ${!canNext ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={() => canNext && setPage(p => p + 1)} aria-label="Next">&raquo;</button>
+              <button className="page-link" onClick={() => canNext && setPage(p => p + 1)}>&raquo;</button>
             </li>
           </ul>
         </nav>
+        <div className="text-muted small">
+          Page {page} of {totalPages}
+        </div>
       </div>
 
       <div id="loading" className={`text-center py-5 ${loading ? '' : 'hidden'}`}>
