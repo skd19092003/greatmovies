@@ -55,7 +55,7 @@ export default function Home() {
   // Debounced search trigger
   const [debouncedQuery, setDebouncedQuery] = useState('')
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedQuery(query.trim()), 400)
+    const t = setTimeout(() => setDebouncedQuery(query.trim()), 1200)
     return () => clearTimeout(t)
   }, [query])
 
