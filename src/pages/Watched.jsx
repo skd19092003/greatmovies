@@ -13,7 +13,7 @@ export default function Watched() {
         {watched.length === 0 && (
           <div className="text-center text-muted py-5">No movies marked as watched</div>
         )}
-        {watched.map((m) => (
+        {watched.reverse().map((m) => (
           <MovieCard key={m.id} movie={m} />
         ))}
       </div>
