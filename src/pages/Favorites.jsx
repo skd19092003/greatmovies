@@ -13,7 +13,7 @@ export default function Favorites() {
         {favorites.length === 0 && (
           <div className="text-center text-muted py-5">No favorite movies yet</div>
         )}
-        {favorites.map((m) => (
+        {favorites.reverse().map((m) => (
           <MovieCard key={m.id} movie={m} />
         ))}
       </div>
