@@ -13,7 +13,7 @@ export default function Watchlist() {
         {watchlist.length === 0 && (
           <div className="text-center text-muted py-5">No movies in your watch later list</div>
         )}
-        {watchlist.map((m) => (
+        {watchlist.reverse().map((m) => (
           <MovieCard key={m.id} movie={m} />
         ))}
       </div>
