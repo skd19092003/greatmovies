@@ -35,7 +35,7 @@ export default function NowPlaying() {
             }
           } catch { /* ignore */ }
         }
-        results = results.slice(0, 21)
+        results = results.slice(0, 20)
 
         setMovies(results)
         setTotalPages(cappedTotalPages)
