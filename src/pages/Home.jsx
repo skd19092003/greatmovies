@@ -87,31 +87,9 @@ export default function Home() {
           results = Array.from(map.values())
         }
 
-        // Stitch to 21 items per page by fetching first item from next page when possible
         const totalFromApi = data.total_pages || 1
         const cappedTotalPages = Math.min(totalFromApi, effectiveCap)
 
-        if (results.length < 21 && results.length === 20 && page < cappedTotalPages) {
-          try {
-            const nextTimeout = Math.max(5000, (effectiveCap < 50 ? 6000 : 8000))
-            const nextOpts = { signal: controller.signal, timeout: nextTimeout }
-            let nextData
-            if (debouncedQuery) {
-              nextData = await searchMovies({ query: debouncedQuery, page: page + 1 }, nextOpts)
-            } else {
-              nextData = await discoverMovies({ page: page + 1, sort_by: sort, with_genres: genre, primary_release_year: year }, nextOpts)
-            }
-            if (!ignore && nextData && Array.isArray(nextData.results) && nextData.results.length > 0) {
-              const existingIds = new Set(results.map(r => r && r.id))
-              const candidate = nextData.results.find(n => n && !existingIds.has(n.id))
-              if (candidate) {
-                results = [...results, candidate]
-              }
-            }
-          } catch {
-            // If next fetch aborted/timed out, keep original 20 without failing the page
-          }
-        }
 
         // Final safety de-dupe
         if (results.length > 1) {
