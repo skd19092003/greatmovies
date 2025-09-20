@@ -151,8 +151,17 @@ export async function getNowPlaying(page = 1, opts = {}) {
 }
 
 // Fetch top-rated movies (paged)
-export async function getTopRated(page = 1, opts = {}) {
-  return get('/movie/top_rated', { page }, opts)
-}
+export const getTopRated = (page = 1, opts = {}) => 
+  get(`/movie/top_rated?page=${page}`, {}, opts)
+
+// Get movie recommendations
+// https://developer.themoviedb.org/reference/movie-recommendations
+export const getMovieRecommendations = (movieId, { page = 1 } = {}, opts = {}) =>
+  get(`/movie/${movieId}/recommendations?page=${page}`, {}, opts)
+
+// Get collection details
+// https://developer.themoviedb.org/reference/collection-details
+export const getMovieCollection = (collectionId, opts = {}) =>
+  get(`/collection/${collectionId}`, {}, opts)
 
 // Upcoming-related helpers removed along with Upcoming page
