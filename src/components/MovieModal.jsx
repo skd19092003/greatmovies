@@ -549,7 +549,7 @@ export default function MovieModal() {
                 </div>
               )}
               {!loading && !details && (
-                <div className="text-center text-muted py-5">No details found.</div>
+                <div className="text-center py-5">No details found.</div>
               )}
             </div>
           </div>
