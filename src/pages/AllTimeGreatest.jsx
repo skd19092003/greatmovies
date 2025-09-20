@@ -76,7 +76,7 @@ export default function AllTimeGreatest() {
       <div className="container-fluid px-2 px-sm-3">
         <div className="text-center mb-4">
           <h1 className="display-5 fw-bold text-gradient mb-2">All-Time Greatest</h1>
-          <p className="text-muted">Top-rated movies of all time</p>
+          <p >Top-rated movies of all time</p>
         </div>
       </div>
 
@@ -105,7 +105,7 @@ export default function AllTimeGreatest() {
           ))
         )}
         {movies.length === 0 && !loading && (
-          <div className="text-center text-muted py-5">No movies found</div>
+          <div className="text-center  py-5">No movies found</div>
         )}
         {movies.map((m) => (
           <MovieCard key={m.id} movie={m} />
