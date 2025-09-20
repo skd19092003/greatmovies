@@ -164,4 +164,25 @@ export const getMovieRecommendations = (movieId, { page = 1 } = {}, opts = {}) =
 export const getMovieCollection = (collectionId, opts = {}) =>
   get(`/collection/${collectionId}`, {}, opts)
 
-// Upcoming-related helpers removed along with Upcoming page
+// Get movie credits (cast and crew)
+// https://developer.themoviedb.org/reference/movie-credits
+export function getMovieCredits(movieId, opts = {}) {
+  return get(`/movie/${movieId}/credits`, {}, opts)
+}
+
+// Get similar movies
+// https://developer.themoviedb.org/reference/movie-similar
+function getSimilarMovies(movieId, { page = 1 } = {}, opts = {}) {
+  return get(`/movie/${movieId}/similar`, { page }, opts)
+}
+
+// Get movie reviews
+// https://developer.themoviedb.org/reference/movie-reviews
+export const getMovieReviews = (movieId, { page = 1 } = {}, opts = {}) =>
+  get(`/movie/${movieId}/reviews`, { page }, opts)
+
+export {
+
+  getSimilarMovies,
+ 
+}
