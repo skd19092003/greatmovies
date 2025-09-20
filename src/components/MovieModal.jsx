@@ -141,14 +141,27 @@ export default function MovieModal() {
               {!loading && details && (
                 <div className="movie-modal-content">
                   <div className="movie-modal-backdrop" style={{
-                    backgroundImage: details.backdrop_path ? `url(${BACKDROP_BASE_URL}${details.backdrop_path})` : 'none',
-                    backgroundSize: 'cover',
+                    backgroundImage: details.backdrop_path 
+                      ? `url(${BACKDROP_BASE_URL}${details.backdrop_path})` 
+                      : details.poster_path 
+                        ? `url(${IMAGE_BASE_URL}${details.poster_path})` 
+                        : 'none',
+                    backgroundSize: details.backdrop_path ? 'cover' : 'contain',
                     backgroundPosition: 'center',
-                    backgroundColor: details.backdrop_path ? 'transparent' : 'var(--bs-dark)',
+                    backgroundColor: (details.backdrop_path || details.poster_path) ? 'transparent' : 'var(--bs-dark)',
                     height: 260,
                     width: '100%',
-                    position: 'relative'
+                    position: 'relative',
+                    backgroundRepeat: 'no-repeat',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#fff',
+                    fontSize: '1.5rem',
+                    fontWeight: 'bold',
+                    textShadow: '2px 2px 4px rgba(0,0,0,0.5)'
                   }}>
+                    {!details.backdrop_path && !details.poster_path && 'No Image'}
                     <div className="backdrop-overlay"></div>
                   </div>
                   <div className="p-3 p-md-4">
