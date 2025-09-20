@@ -34,11 +34,11 @@ export default function Watchlist() {
     <div id="watchlist-page" className="page-content">
       <div className="text-center mb-4">
         <h1 className="display-4 fw-bold text-gradient mb-3">Watch Later</h1>
-        <p className="lead text-muted">Movies you want to watch</p>
+        <p className="lead ">Movies you want to watch</p>
       </div>
       <div id="watchlist-movies" className="movie-grid">
         {watchlist.length === 0 ? (
-          <div className="text-center text-muted py-5">No movies in your watch later list</div>
+          <div className="text-center  py-5">No movies in your watch later list</div>
         ) : (
           paginatedMovies.map((m) => (
             <MovieCard key={m.id} movie={m} />
