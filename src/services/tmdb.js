@@ -7,7 +7,7 @@ const API_KEY = import.meta.env.VITE_TMDB_API_KEY
 // Otherwise it falls back to the direct TMDB domain.
 const PROXY_URL = import.meta.env.VITE_TMDB_PROXY_URL || ''
 const DIRECT_URL = 'https://api.themoviedb.org/3'
-
+ 
 // SIMPLE, RELIABLE BEHAVIOR:
 // - Prefer the proxy to avoid ISP issues (e.g., Jio blocking).
 // - If the proxy fails once (network/timeout/5xx like 525), disable it for this session
