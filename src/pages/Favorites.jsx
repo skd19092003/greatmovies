@@ -34,7 +34,7 @@ export default function Favorites() {
     <div id="favorites-page" className="page-content">
       <div className="text-center mb-4">
         <h1 className="display-4 fw-bold text-gradient mb-3">Favorites</h1>
-        <p className="lead text-muted">Your all-time favorite Movies</p>
+        <p className="lead ">Your all-time favorite Movies</p>
       </div>
       <div id="favorite-movies" className="movie-grid">
         {favorites.length === 0 ? (
