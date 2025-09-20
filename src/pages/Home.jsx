@@ -1,16 +1,47 @@
 import { useEffect, useState } from 'react'
-import { discoverMovies, getGenres, searchMovies } from '../services/tmdb'
+import { discoverMovies, getGenres, searchMovies, getNowPlaying } from '../services/tmdb'
 import MovieCard from '../components/MovieCard'
 
 export default function Home() {
   const [genres, setGenres] = useState([])
   const [years, setYears] = useState([])
+  const [languages, _setLanguages] = useState([
+    { iso_639_1: 'en', english_name: 'English' },
+    { iso_639_1: 'hi', english_name: 'Hindi' },
+    { iso_639_1: 'ta', english_name: 'Tamil' },
+    { iso_639_1: 'te', english_name: 'Telugu' },
+    { iso_639_1: 'kn', english_name: 'Kannada' },
+    { iso_639_1: 'ml', english_name: 'Malayalam' },
+    { iso_639_1: 'ko', english_name: 'Korean' },
+    { iso_639_1: 'ja', english_name: 'Japanese' },
+    { iso_639_1: 'zh', english_name: 'Chinese' },
+    { iso_639_1: 'es', english_name: 'Spanish' },
+    { iso_639_1: 'tr', english_name: 'Turkish' },
+  ])
+
+  const [watchProviders, _setWatchProviders] = useState([
+    { provider_id: 8, provider_name: 'Netflix' },
+    { provider_id: 119, provider_name: 'Amazon Prime Video' },
+    { provider_id: 337, provider_name: 'Disney+' },
+    { provider_id: 350, provider_name: 'Apple TV+' },
+    { provider_id: 1899, provider_name: 'Max' },
+    { provider_id: 9, provider_name: 'Amazon Video' },
+    { provider_id: 15, provider_name: 'Hulu' },
+    { provider_id: 531, provider_name: 'Paramount+' },
+    { provider_id: 386, provider_name: 'Peacock' },
+    { provider_id: 29, provider_name: 'HBO Max' },
+    { provider_id: 43, provider_name: 'Starz' },
+    { provider_id: 257, provider_name: 'fuboTV' },
+    { provider_id: 358, provider_name: 'DIRECTV' },
+  ])
 
   const [query, setQuery] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState('')
   const [genre, setGenre] = useState('')
   const [year, setYear] = useState('')
-  const [sort, setSort] = useState('popularity.desc')
-
+  const [language, setLanguage] = useState('')
+  const [selectedProvider, setSelectedProvider] = useState('')
+  const [sort, setSort] = useState('') // Empty by default to show Now Playing
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [movies, setMovies] = useState([])
@@ -52,29 +83,92 @@ export default function Home() {
     return () => { mounted = false }
   }, [])
 
-  // Debounced search trigger
-  const [debouncedQuery, setDebouncedQuery] = useState('')
+  // Update debounced query after user stops typing
   useEffect(() => {
-    const t = setTimeout(() => setDebouncedQuery(query.trim()), 1100)
-    return () => clearTimeout(t)
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query.trim())
+      // Reset to first page when search query changes
+      setPage(1)
+    }, 900)
+    
+    return () => clearTimeout(handler)
   }, [query])
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    setQuery(e.target.value)
+  }
+
+  // Handle search submission (when pressing Enter)
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      setDebouncedQuery(query.trim())
+      setPage(1)
+    }
+  }
 
   // Fetch movies when filters change
   useEffect(() => {
     let ignore = false
     const controller = new AbortController()
+    
     async function load() {
       setLoading(true)
       setError('')
+      
       try {
         let data
         const effectiveCap = computePageCap()
         const baseTimeout = effectiveCap < 50 ? 8000 : 10000
         const opts = { signal: controller.signal, timeout: baseTimeout }
+
         if (debouncedQuery) {
-          data = await searchMovies({ query: debouncedQuery, page }, opts)
+          // When searching, use the search endpoint
+          data = await searchMovies({ 
+            query: debouncedQuery, 
+            page,
+            include_adult: false
+          }, opts)
+        } else if (sort === '') {
+          // Default view - Show Now Playing when no sort is selected
+          data = await getNowPlaying(page, opts);
         } else {
-          data = await discoverMovies({ page, sort_by: sort, with_genres: genre, primary_release_year: year }, opts)
+          // Handle other sort cases with discover
+          const params = {
+            page,
+            sort_by: 'popularity.desc',
+            with_genres: genre,
+            primary_release_year: year,
+            with_original_language: language,
+            with_watch_providers: selectedProvider,
+            watch_region: 'US',
+            include_adult: false,
+            include_video: false
+          };
+
+          // Handle sort cases
+          switch(sort) {
+            case 'highest_grossing':
+              params.sort_by = 'revenue.desc';
+              break;
+            case 'most_popular':
+              params.sort_by = 'popularity.desc';
+              break;
+            case 'oldest':
+              params.sort_by = 'primary_release_date.asc';
+              break;
+            case 'newest':
+              params.sort_by = 'primary_release_date.desc';
+              break;
+            case 'most_voted':
+              params.sort_by = 'vote_count.desc';
+              break;
+            default:
+              params.sort_by = 'popularity.desc';
+          }
+
+          data = await discoverMovies(params, opts);
         }
 
         if (ignore) return
@@ -87,6 +181,7 @@ export default function Home() {
           results = Array.from(map.values())
         }
 
+        
         const totalFromApi = data.total_pages || 1
         const cappedTotalPages = Math.min(totalFromApi, effectiveCap)
 
@@ -127,7 +222,7 @@ export default function Home() {
     }
     load()
     return () => { ignore = true; controller.abort() }
-  }, [debouncedQuery, genre, year, sort, page, reloadTick])
+  }, [debouncedQuery, genre, year, sort, page, reloadTick, language, selectedProvider])
 
   // Clamp page to totalPages when cap applies
   useEffect(() => {
@@ -135,31 +230,52 @@ export default function Home() {
   }, [totalPages, page])
 
   // Reset page when criteria change
-  useEffect(() => { setPage(1) }, [debouncedQuery, genre, year, sort])
+  useEffect(() => { setPage(1) }, [debouncedQuery, genre, year, sort, language, selectedProvider])
 
-  // Scroll to grid top on page change
+  // Scroll to window top on page change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [page])
 
-
   // Persist discover state to localStorage (legacy parity)
   useEffect(() => {
     try {
-      localStorage.setItem('cinevault_discover', JSON.stringify({ query, genre, year, sort, page }))
+      localStorage.setItem('cinevault_discover', JSON.stringify({ query, genre, year, sort, page, language, selectedProvider }))
     } catch { /* noop */ }
-  }, [query, genre, year, sort, page])
+  }, [query, genre, year, sort, page, language, selectedProvider])
 
   const canPrev = page > 1
   const canNext = page < totalPages
 
-  const onReset = () => {
-    setQuery('')
-    setGenre('')
-    setYear('')
-    setSort('popularity.desc')
-    setPage(1)
-  }
+  const handleGenreChange = (e) => {
+    setGenre(e.target.value);
+    setSort('most_popular');
+  };
+
+  const handleYearChange = (e) => {
+    setYear(e.target.value);
+    setSort('most_popular');
+  };
+
+  const handleLanguageChange = (e) => {
+    setLanguage(e.target.value);
+    setSort('most_popular');
+  };
+
+  const handleProviderChange = (e) => {
+    setSelectedProvider(e.target.value);
+    setSort('most_popular');
+  };
+
+  const resetFilters = () => {
+    setQuery('');
+    setGenre('');
+    setYear('');
+    setLanguage('');
+    setSelectedProvider('');
+    setSort(''); // Reset to empty to show Now Playing
+    setPage(1);
+  };
 
   const onRetry = () => setReloadTick((t) => t + 1)
 
@@ -171,159 +287,166 @@ export default function Home() {
           <p className="lead text-muted">Find your next favorite Movies from any language</p>
         </div>
 
-        {/* Search and Filters */}
-        <div className="search-container mb-4">
-          <div className="row align-items-end w-100 g-2">
-            <div className="col-md-6">
-              <div className="search-input-wrapper">
-                <div className="input-group">
-                  <span className="input-group-text">
-                    <i className="fas fa-search"></i>
-                  </span>
-                  <input
-                    type="text"
-                    id="search"
-                    className="form-control search-input"
-                    placeholder="Search for movies..."
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-                        // trigger immediate search
-                        setPage(1)
-                        // set debounced immediately by syncing state
-                        // (effect will pick up new debouncedQuery on next tick)
-                        // optional: force reload tick if same query
-                      }
-                    }}
-                  />
-                </div>
+        {/* Search Bar - Full width */}
+        <div className="row mb-3">
+          <div className="col-12">
+            <div className="input-group">
+              <span className="input-group-text">
+                <i className="fas fa-search"></i>
+              </span>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search movies..."
+                value={query}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchSubmit}
+              />
             </div>
           </div>
-          <div className="col-md-2">
-            <select
-              id="genre-filter"
-              className="form-select"
-              aria-label="Filter by genre"
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
-            >
+        </div>
+
+        {/* Filters - 2 columns on mobile, single row on desktop */}
+        <div className="row g-2 mb-3">
+          {/* Genre */}
+          <div className="col-6 col-md-2">
+            <select className="form-select" value={genre} onChange={handleGenreChange}>
               <option value="">All Genres</option>
               {genres.map((g) => (
                 <option key={g.id} value={g.id}>{g.name}</option>
               ))}
             </select>
           </div>
-          <div className="col-md-2">
-            <select
-              id="year-filter"
-              className="form-select"
-              aria-label="Filter by year"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-            >
+
+          {/* Year */}
+          <div className="col-6 col-md-2">
+            <select className="form-select" value={year} onChange={handleYearChange}>
               <option value="">All Years</option>
               {years.map((y) => (
                 <option key={y} value={y}>{y}</option>
               ))}
             </select>
           </div>
-          <div className="col-md-2">
-            <select
-              id="sort-filter"
-              className="form-select mb-2 mb-md-0"
-              aria-label="Sort movies"
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-            >
-              <option value="popularity.desc">Most Popular</option>
-              <option value="release_date.desc">Newest First</option>
-              <option value="vote_average.desc">Highest Rated</option>
-              <option value="title.asc">A-Z</option>
+
+          {/* Language */}
+          <div className="col-6 col-md-2">
+            <select className="form-select" value={language} onChange={handleLanguageChange}>
+              <option value="">All Languages</option>
+              {languages.map((lang) => (
+                <option key={lang.iso_639_1} value={lang.iso_639_1}>{lang.english_name}</option>
+              ))}
             </select>
           </div>
-          <div className="col-12 col-md-2 d-grid gap-8 d-md-block mt-2 mt-md-0">
-            <button id="reset-filters" className="btn btn-outline-secondary w-100" onClick={onReset}>
+
+          {/* Streaming */}
+          <div className="col-6 col-md-2">
+            <select className="form-select" value={selectedProvider} onChange={handleProviderChange}>
+              <option value="">All Services</option>
+              {watchProviders.map((provider) => (
+                <option key={provider.provider_id} value={provider.provider_id}>
+                  {provider.provider_name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sort */}
+          <div className="col-6 col-md-2">
+            <select 
+              className="form-select" 
+              value={sort} 
+              onChange={(e) => setSort(e.target.value)}
+            >
+              <option value="">Sort By</option>
+              <option value="highest_grossing">Highest Grossing</option>
+              <option value="most_popular">Most Popular</option>
+              <option value="oldest">Oldest</option>
+              <option value="newest">Newest</option>
+              <option value="most_voted">Most Voted</option>
+            </select>
+          </div>
+
+          {/* Reset */}
+          <div className="col-6 col-md-2">
+            <button className="btn btn-outline-secondary w-100" onClick={resetFilters}>
               <i className="fas fa-sync-alt me-1"></i> Reset
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Movies Grid */}
-      {error && (
-        <div className="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
-          <span>{error}</span>
-          <button type="button" className="btn btn-sm btn-light" onClick={onRetry}>
-            <i className="fas fa-redo me-1"></i>Retry
-          </button>
-        </div>
-      )}
-      <div id="movie-box" className="movie-grid">
-        {loading && movies.length === 0 && (
-          Array.from({ length: 12 }).map((_, i) => (
-            <div key={`skeleton-${i}`} className="movie-card placeholder-wave">
-              <div className="movie-poster-wrapper bg-secondary placeholder" style={{ aspectRatio: '2/3' }} />
-              <div className="movie-info p-2">
-                <div className="d-flex justify-content-between align-items-start">
-                  <span className="placeholder col-8"></span>
-                  <span className="badge bg-primary placeholder col-2">&nbsp;</span>
+        {/* Movies Grid */}
+        {error && (
+          <div className="alert alert-danger d-flex justify-content-between align-items-center" role="alert">
+            <span>{error}</span>
+            <button type="button" className="btn btn-sm btn-light" onClick={onRetry}>
+              <i className="fas fa-redo me-1"></i>Retry
+            </button>
+          </div>
+        )}
+        <div id="movie-box" className="movie-grid">
+          {loading && movies.length === 0 && (
+            Array.from({ length: 12 }).map((_, i) => (
+              <div key={`skeleton-${i}`} className="movie-card placeholder-wave">
+                <div className="movie-poster-wrapper bg-secondary placeholder" style={{ aspectRatio: '2/3' }} />
+                <div className="movie-info p-2">
+                  <div className="d-flex justify-content-between align-items-start">
+                    <span className="placeholder col-8"></span>
+                    <span className="badge bg-primary placeholder col-2">&nbsp;</span>
+                  </div>
+                  <small className="text-muted"><span className="placeholder col-3"></span></small>
                 </div>
-                <small className="text-muted"><span className="placeholder col-3"></span></small>
               </div>
-            </div>
-          ))
-        )}
-        {movies.length === 0 && !loading && (
-          <div className="text-center text-muted py-5">No movies found</div>
-        )}
-        {movies.map((m) => (
-          <MovieCard key={m.id} movie={m} />
-        ))}
-      </div>
-
-      {/* Pagination */}
-      <div className="d-flex flex-column align-items-center mt-4">
-        <nav aria-label="Movie pagination">
-          <ul className="pagination mb-2">
-            <li className={`page-item ${!canPrev ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={() => canPrev && setPage(p => p - 1)}>&laquo;</button>
-            </li>
-            
-            <li className={`page-item ${page === 1 ? 'active' : ''}`}>
-              <button className="page-link" onClick={() => setPage(1)}>1</button>
-            </li>
-            
-            {totalPages >= 10 && (
-              <li className={`page-item ${page === 10 ? 'active' : ''}`}>
-                <button className="page-link" onClick={() => setPage(10)}>10</button>
-              </li>
-            )}
-            
-            {totalPages >= 20 && (
-              <li className={`page-item ${page === 20 ? 'active' : ''}`}>
-                <button className="page-link" onClick={() => setPage(20)}>20</button>
-              </li>
-            )}
-            
-            <li className={`page-item ${!canNext ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={() => canNext && setPage(p => p + 1)}>&raquo;</button>
-            </li>
-          </ul>
-        </nav>
-        <div className="text-muted small">
-          Page {page} of {totalPages}
+            ))
+          )}
+          {movies.length === 0 && !loading && (
+            <div className="text-center text-muted py-5">No movies found</div>
+          )}
+          {movies.map((m) => (
+            <MovieCard key={m.id} movie={m} />
+          ))}
         </div>
-      </div>
 
-      {/* Loading Spinner */}
-      <div id="loading" className={`text-center py-5 ${loading ? '' : 'hidden'}`}>
-        <div className="spinner-border text-primary loading-spinner" role="status">
-          <span className="visually-hidden">Loading...</span>
+        {/* Pagination */}
+        <div className="d-flex flex-column align-items-center mt-4">
+          <nav aria-label="Movie pagination">
+            <ul className="pagination mb-2">
+              <li className={`page-item ${!canPrev ? 'disabled' : ''}`}>
+                <button className="page-link" onClick={() => canPrev && setPage(p => p - 1)}>&laquo;</button>
+              </li>
+              
+              <li className={`page-item ${page === 1 ? 'active' : ''}`}>
+                <button className="page-link" onClick={() => setPage(1)}>1</button>
+              </li>
+              
+              {totalPages >= 10 && (
+                <li className={`page-item ${page === 10 ? 'active' : ''}`}>
+                  <button className="page-link" onClick={() => setPage(10)}>10</button>
+                </li>
+              )}
+              
+              {totalPages >= 20 && (
+                <li className={`page-item ${page === 20 ? 'active' : ''}`}>
+                  <button className="page-link" onClick={() => setPage(20)}>20</button>
+                </li>
+              )}
+              
+              <li className={`page-item ${!canNext ? 'disabled' : ''}`}>
+                <button className="page-link" onClick={() => canNext && setPage(p => p + 1)}>&raquo;</button>
+              </li>
+            </ul>
+          </nav>
+          <div className="text-muted small">
+            Page {page} of {totalPages}
+          </div>
         </div>
-        <p className="mt-3 text-muted">Loading movies...</p>
-      </div>
+
+        {/* Loading Spinner */}
+        <div id="loading" className={`text-center py-5 ${loading ? '' : 'hidden'}`}>
+          <div className="spinner-border text-primary loading-spinner" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-3 text-muted">Loading movies...</p>
+        </div>
       </div>
     </div>
   )
