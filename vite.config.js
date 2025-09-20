@@ -29,6 +29,9 @@ export default defineConfig(({ command }) => {
 
   return {
     plugins: [react()],
+    optimizeDeps: {
+      include: ['ogl']
+    },
     server,
     preview: {
       port: 3000,
@@ -37,6 +40,13 @@ export default defineConfig(({ command }) => {
     build: {
       target: 'es2015',
       sourcemap: false,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            ogl: ['ogl']
+          }
+        }
+      }
       // Use default esbuild minifier on Vercel
     },
   };
