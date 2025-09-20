@@ -38,7 +38,7 @@ export default function Favorites() {
       </div>
       <div id="favorite-movies" className="movie-grid">
         {favorites.length === 0 ? (
-          <div className="text-center text-muted py-5">No favorite movies yet</div>
+          <div className="text-center py-5">No favorite movies yet</div>
         ) : (
           paginatedMovies.map((m) => (
             <MovieCard key={m.id} movie={m} />
