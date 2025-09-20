@@ -110,11 +110,29 @@ export async function getPopular(page = 1, opts = {}) {
   return get('/movie/popular', { page }, opts)
 }
 
-// Discover movies with optional filters (genres, year) and sort
-export async function discoverMovies({ page = 1, sort_by = 'popularity.desc', with_genres = '', primary_release_year = '' } = {}, opts = {}) {
-  const params = { page, sort_by }
-  if (with_genres) params.with_genres = with_genres
-  if (primary_release_year) params.primary_release_year = primary_release_year
+// Discover movies with optional filters (genres, year, language, providers, keywords) and sort
+export async function discoverMovies({ 
+  page = 1, 
+  sort_by = 'popularity.desc', 
+  with_genres = '', 
+  primary_release_year = '',
+  with_original_language = '',
+  with_watch_providers = '',
+  with_keywords = '',
+  watch_region = 'IN' 
+} = {}, opts = {}) {
+  const params = {
+    sort_by,
+    page,
+    ...(with_genres && { with_genres }),
+    ...(primary_release_year && { primary_release_year }),
+    ...(with_original_language && { with_original_language }),
+    ...(with_watch_providers && { with_watch_providers }),
+    ...(with_keywords && { with_keywords }),
+    watch_region,
+    include_adult: false,
+    include_video: false
+  }
   return get('/discover/movie', params, opts)
 }
 
@@ -181,8 +199,18 @@ function getSimilarMovies(movieId, { page = 1 } = {}, opts = {}) {
 export const getMovieReviews = (movieId, { page = 1 } = {}, opts = {}) =>
   get(`/movie/${movieId}/reviews`, { page }, opts)
 
-export {
+// Fetch available watch providers for a specific region
+async function getWatchProviders(region = 'US', opts = {}) {
+  try {
+    const data = await get(`/watch/providers/movie`, { watch_region: region }, opts);
+    return data.results || [];
+  } catch (error) {
+    console.error('Error fetching watch providers:', error);
+    return [];
+  }
+}
 
+export {
   getSimilarMovies,
- 
+  getWatchProviders,
 }
