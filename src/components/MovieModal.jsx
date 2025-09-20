@@ -176,7 +176,7 @@ export default function MovieModal() {
                             <div className="fw-semibold mb-1">Stream</div>
                             <div className="provider-group">
                               {providers.flatrate.map(pr => (
-                                <span key={`flatrate-${pr.provider_id}`} className="provider-chip" title={pr.provider_name}>{pr.provider_name}</span>
+                                <span key={`flatrate-${pr.provider_id}`} className="provider-chip me-2 mb-2" title={pr.provider_name}>{pr.provider_name}</span>
                               ))}
                             </div>
                           </div>
@@ -186,7 +186,7 @@ export default function MovieModal() {
                             <div className="fw-semibold mb-1">Rent</div>
                             <div className="provider-group">
                               {providers.rent.map(pr => (
-                                <span key={`rent-${pr.provider_id}`} className="provider-chip" title={pr.provider_name}>{pr.provider_name}</span>
+                                <span key={`rent-${pr.provider_id}`} className="provider-chip me-2 mb-2" title={pr.provider_name}>{pr.provider_name}</span>
                               ))}
                             </div>
                           </div>
@@ -196,12 +196,12 @@ export default function MovieModal() {
                             <div className="fw-semibold mb-1">Buy</div>
                             <div className="provider-group">
                               {providers.buy.map(pr => (
-                                <span key={`buy-${pr.provider_id}`} className="provider-chip" title={pr.provider_name}>{pr.provider_name}</span>
+                                <span key={`buy-${pr.provider_id}`} className="provider-chip me-2 mb-2" title={pr.provider_name}>{pr.provider_name}</span>
                               ))}
                             </div>
                           </div>
                         ) : null}
-                        {/* More options link removed as per request */}
+                       
                       </div>
                     ) : null}
                     {trailer ? (
