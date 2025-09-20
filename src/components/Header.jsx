@@ -30,6 +30,12 @@ export default function Header({ theme = 'dark', onToggleTheme = () => {} }) {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink className={({isActive}) => `nav-link me-lg-2 ${isActive ? 'active' : ''}`} to="/lucky-wheel">
+                <i className="fas fa-dice me-1"></i>
+                Lucky Wheel
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink className={({isActive}) => `nav-link me-lg-2 ${isActive ? 'active' : ''}`} to="/greatest">
                 <i className="fas fa-trophy me-1"></i>
                 Greatest
