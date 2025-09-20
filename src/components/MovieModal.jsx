@@ -241,7 +241,8 @@ export default function MovieModal() {
                   </div>
                  )}
                     
-                    {(details.budget > 0 || details.revenue > 0 || details.vote_average) && (
+                    {/* Only show Financials & Ratings if there's any data */}
+                    {(details.budget > 0 || details.revenue > 0 || (details.vote_average && details.vote_count > 0)) && (
                       <div className="mt-3">
                         <h6 className="mb-3 text-uppercase small fw-bold text-center">Financials & Ratings</h6>
                         <div className="d-flex flex-wrap justify-content-center gap-3">
@@ -261,7 +262,7 @@ export default function MovieModal() {
                               </div>
                             </div>
                           )}
-                          {details.vote_average > 0 && (
+                          {details.vote_average > 0 && details.vote_count > 0 && (
                             <div className="p-3 border rounded">
                               <div className="small fw-medium">User Rating</div>
                               <div className="fw-semibold">
@@ -275,11 +276,13 @@ export default function MovieModal() {
                         </div>
                       </div>
                     )}
-                    {(providers.flatrate.length || providers.rent.length || providers.buy.length) && (
+
+                    {/* Only show Where to Watch if there are any providers */}
+                    {(providers.flatrate.length > 0 || providers.rent.length > 0 || providers.buy.length > 0) && (
                       <div className="mt-3">
                         <h6 className="mb-3 text-uppercase small fw-bold text-center">Where to Watch</h6>
                         <div className="d-flex flex-wrap justify-content-center gap-3">
-                          {providers.flatrate.length ? (
+                          {providers.flatrate.length > 0 && (
                             <div className="p-3 border rounded" style={{ minWidth: '200px' }}>
                               <div className="small fw-medium text-center mb-2">Stream</div>
                               <div className="d-flex flex-wrap justify-content-center gap-2">
@@ -290,8 +293,8 @@ export default function MovieModal() {
                                 ))}
                               </div>
                             </div>
-                          ) : null}
-                          {providers.rent.length ? (
+                          )}
+                          {providers.rent.length > 0 && (
                             <div className="p-3 border rounded" style={{ minWidth: '200px' }}>
                               <div className="small fw-medium text-center mb-2">Rent</div>
                               <div className="d-flex flex-wrap justify-content-center gap-2">
@@ -302,8 +305,8 @@ export default function MovieModal() {
                                 ))}
                               </div>
                             </div>
-                          ) : null}
-                          {providers.buy.length ? (
+                          )}
+                          {providers.buy.length > 0 && (
                             <div className="p-3 border rounded" style={{ minWidth: '200px' }}>
                               <div className="small fw-medium text-center mb-2">Buy</div>
                               <div className="d-flex flex-wrap justify-content-center gap-2">
@@ -314,7 +317,7 @@ export default function MovieModal() {
                                 ))}
                               </div>
                             </div>
-                          ) : null}
+                          )}
                         </div>
                       </div>
                     )}
