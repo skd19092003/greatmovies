@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { BACKDROP_BASE_URL, IMAGE_BASE_URL, getMovieDetails, getMovieVideos, getMovieProviders, getMovieRecommendations, getMovieCollection } from '../services/tmdb'
+import { BACKDROP_BASE_URL, IMAGE_BASE_URL, getMovieDetails, getMovieVideos, getMovieProviders, getMovieRecommendations, getMovieCollection, getMovieCredits } from '../services/tmdb'
 import { useMovies } from '../contexts/MovieContext.jsx'
+import styles from './MovieModal.module.css'
 
 // Helper function to format currency in a shortened format (e.g., $1.5B, $1.5M, $150K)
 const formatCurrency = (amount) => {
@@ -31,6 +32,7 @@ export default function MovieModal() {
   const [providers, setProviders] = useState({ flatrate: [], rent: [], buy: [], link: '' })
   const [collection, setCollection] = useState(null)
   const [recommendations, setRecommendations] = useState([])
+  const [credits, setCredits] = useState(null)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -54,11 +56,12 @@ export default function MovieModal() {
         const movieDetails = await getMovieDetails(openId)
         
         // Then fetch all data in parallel
-        const [v, p, rec, col] = await Promise.all([
+        const [v, p, rec, col, creds] = await Promise.all([
           getMovieVideos(openId),
           getMovieProviders(openId),
           getMovieRecommendations(openId),
-          movieDetails.belongs_to_collection ? getMovieCollection(movieDetails.belongs_to_collection.id) : Promise.resolve(null)
+          movieDetails.belongs_to_collection ? getMovieCollection(movieDetails.belongs_to_collection.id) : Promise.resolve(null),
+          getMovieCredits(openId)
         ])
         
         if (!ignore) {
@@ -66,6 +69,7 @@ export default function MovieModal() {
           setVideos(v)
           setRecommendations(rec?.results || [])
           setCollection(col)
+          setCredits(creds)
           
           // pick region preference: try IN, then US, then GB/CA/AU, else first available
           const regionOrder = ['IN', 'US', 'GB', 'CA', 'AU']
@@ -169,11 +173,26 @@ export default function MovieModal() {
                             {details.genres.map(g => <span key={g.id} className="badge bg-secondary me-1">{g.name}</span>)}
                           </div>
                         )}
+                        {credits?.crew?.find(member => member.job === 'Director') && (
+                          <div className="mb-2">
+                            <span className="me-1 fw-semibold">Director :</span>
+                            <span className="fw-bold">
+                              {credits.crew
+                                .filter(member => member.job === 'Director')
+                                .map((director, index, array) => (
+                                  <span key={director.id}>
+                                    {director.name}{index < array.length - 1 ? ', ' : ''}
+                                  </span>
+                                ))}
+                            </span>
+                          </div>
+                        )}
+                        
                         <div className="small movie-modal-stats">
-                          {details.runtime ? <span className="me-3"><i className="fas fa-clock me-1"></i>{details.runtime} min</span> : null}
-                          {details.spoken_languages?.length ? (
+                          {details.runtime && <span className="me-3"><i className="fas fa-clock me-1"></i>{details.runtime} min</span> }
+                          {details.spoken_languages?.length && (
                             <span className="me-3"><i className="fas fa-language me-1"></i>{details.spoken_languages.map(l => l.english_name || l.name).join(', ')}</span>
-                          ) : null}
+                          ) }
                         </div>
                         
                         {/* External Links */}
@@ -230,6 +249,72 @@ export default function MovieModal() {
                         </div>
                       </div>
                     </div>
+
+
+                     {/* Cast Section */}
+                     {credits?.cast?.length > 0 && (
+                      <div className="mt-4">
+                        <h5 className="mb-3 fw-bold">Cast</h5>
+                        <div className="position-relative">
+                          <div className={`d-flex overflow-auto pb-3 ${styles.horizontalScrollContainer}`}>
+                            <div className="d-flex gap-3" style={{ minWidth: 'max-content' }}>
+                              {credits.cast.slice(0, 10).map(person => (
+                                <div key={person.id} className="flex-shrink-0 text-center" style={{ width: '100px' }}>
+                                  <div className="position-relative rounded-circle overflow-hidden mb-2" style={{
+                                    width: '80px',
+                                    height: '80px',
+                                    margin: '0 auto',
+                                    border: '2px solid rgba(255,255,255,0.1)'
+                                  }}>
+                                    <img
+                                      src={
+                                        person.profile_path 
+                                          ? `https://image.tmdb.org/t/p/w185${person.profile_path}`
+                                          : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODUiIGhlaWdodD0iMjc4IiB2aWV3Qm94PSIwIDAgMTg1IDI3OCIgZmlsbD0iIzJjM2U1MCI+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjN2Y4Y2E2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4='
+                                      }
+                                      alt={person.name}
+                                      className="img-fluid h-100 w-100"
+                                      style={{ objectFit: 'cover' }}
+                                      loading="lazy"
+                                      onError={(e) => {
+                                        if (!e.target.src.includes('data:')) {
+                                          e.target.onerror = null;
+                                          e.target.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxODUiIGhlaWdodD0iMjc4IiB2aWV3Qm94PSIwIDAgMTg1IDI3OCIgZmlsbD0iIzJjM2U1MCI+PHBhdGggZD0iTTAgMGgxODV2Mjc4SDB6Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjN2Y4Y2E2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD48L3N2Zz4=';
+                                        }
+                                      }}
+                                    />
+                                  </div>
+                                  <div className=" fw-medium font-bold " style={{ maxWidth: '100px' }} title={person.name}>
+                                    {person.name}
+                                  </div>
+                                  <div className="small text-truncate" style={{ maxWidth: '100px' }} title={person.character || 'N/A'}>
+                                    {person.character || 'N/A'}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <button 
+                            className="position-absolute start-0 top-50 translate-middle-y btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center"
+                            style={{ width: '32px', height: '32px', zIndex: 1, left: '-16px' }}
+                            onClick={(e) => {
+                              e.currentTarget.parentNode.querySelector('.d-flex.overflow-auto').scrollBy({ left: -200, behavior: 'smooth' });
+                            }}
+                          >
+                            <i className="fas fa-chevron-left"></i>
+                          </button>
+                          <button 
+                            className="position-absolute end-0 top-50 translate-middle-y btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center"
+                            style={{ width: '32px', height: '32px', zIndex: 1, right: '-16px' }}
+                            onClick={(e) => {
+                              e.currentTarget.parentNode.querySelector('.d-flex.overflow-auto').scrollBy({ left: 200, behavior: 'smooth' });
+                            }}
+                          >
+                            <i className="fas fa-chevron-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    )}
 
 
                     
@@ -321,6 +406,11 @@ export default function MovieModal() {
                         </div>
                       </div>
                     )}
+
+
+                    
+
+
                     {trailer ? (
                       <div className="ratio ratio-16x9 mt-3">
                         <iframe
@@ -330,24 +420,17 @@ export default function MovieModal() {
                           allowFullScreen
                         />
                       </div>
-                    ) : (
+                    )  : (
                       <div className="alert alert-info mt-3 mb-0">Trailer not available.</div>
-                    )}
+                     )}
 
-                    {/* Collection Section */}
+
+                    
                     {collection && collection.parts && collection.parts.length > 0 && (
                       <div className="mt-4">
                         <h5 className="mb-3 fw-bold">Part of the {collection.name}</h5>
                         <div className="position-relative">
-                          <div className="d-flex overflow-auto pb-3" style={{
-                            scrollbarWidth: 'thin',
-                            msOverflowStyle: 'none',
-                            scrollbarColor: '#888 transparent',
-                            '&::-webkit-scrollbar': { height: '6px' },
-                            '&::-webkit-scrollbar-track': { background: 'transparent' },
-                            '&::-webkit-scrollbar-thumb': { backgroundColor: '#888', borderRadius: '3px' },
-                            scrollBehavior: 'smooth'
-                          }}>
+                          <div className={`d-flex overflow-auto pb-3 ${styles.horizontalScrollContainer}`}>
                             <div className="d-flex gap-3" style={{ minWidth: 'max-content' }}>
                               {collection.parts.map(movie => (
                                 <div key={movie.id} className="flex-shrink-0" style={{ width: '120px' }}>
@@ -436,27 +519,16 @@ export default function MovieModal() {
                         </div>
                       </div>
                     )}
+                    
 
-                    {/* Recommendations Section */}
+                   
+
+                     
                     {recommendations && recommendations.length > 0 && (
                       <div className="mt-4">
                         <h5 className="mb-3 fw-bold">You May Also Enjoy</h5>
                         <div className="position-relative">
-                          <div className="d-flex overflow-auto pb-3" style={{
-                            scrollbarWidth: 'thin',
-                            msOverflowStyle: 'none',
-                            '&::-webkit-scrollbar': {
-                              height: '6px'
-                            },
-                            '&::-webkit-scrollbar-track': {
-                              background: 'transparent'
-                            },
-                            '&::-webkit-scrollbar-thumb': {
-                              backgroundColor: '#888',
-                              borderRadius: '3px'
-                            },
-                            scrollBehavior: 'smooth'
-                          }}>
+                          <div className={`d-flex overflow-auto pb-3 ${styles.horizontalScrollContainer}`}>
                             <div className="d-flex gap-3" style={{ minWidth: 'max-content' }}>
                               {recommendations.map(movie => (
                                 <div key={movie.id} className="flex-shrink-0" style={{ width: '120px' }}>
