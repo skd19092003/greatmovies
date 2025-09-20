@@ -2,6 +2,8 @@
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "nodeVersion": "18.x",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],
