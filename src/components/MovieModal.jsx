@@ -121,7 +121,17 @@ export default function MovieModal() {
                       <div>
                         <h3 className="mb-1">{details.title}</h3>
                         <div className="movie-modal-meta mb-2">
-                          {(details.release_date || '').slice(0,4)} • {Math.round((details.vote_average || 0) * 10) / 10}
+                          {details.release_date && (
+                            <span className="me-3">
+                              <i className="far fa-calendar-alt me-1"></i>
+                              {new Date(details.release_date).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                              })}
+                            </span>
+                          )}
+                          <span>{Math.round((details.vote_average || 0) * 10) / 10} <i className="fas fa-star text-warning"></i></span>
                         </div>
                         {details.genres?.length > 0 && (
                           <div className="mb-2">
