@@ -584,11 +584,11 @@ export default function MovieModal() {
                                       flexDirection: 'column',
                                       justifyContent: 'space-between'
                                     }}>
-                                      <div className="small fw-medium text-truncate" title={movie.title}>
+                                      <div className="small fw-medium text-truncate text-black" title={movie.title}>
                                         {movie.title}
                                       </div>
                                       <div className="d-flex justify-content-between align-items-center mt-1">
-                                        <small className="text-muted">
+                                        <small className="text-black">
                                           {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
                                         </small>
                                         <button 
