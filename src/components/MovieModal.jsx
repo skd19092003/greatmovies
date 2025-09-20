@@ -456,19 +456,40 @@ export default function MovieModal() {
                                       boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
                                     }
                                   }}>
-                                    <img 
-                                      src={movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : 'https://via.placeholder.com/200x300?text=No+Poster'} 
-                                      alt={movie.title}
-                                      className="img-fluid"
-                                      style={{ 
-                                        width: '100%', 
-                                        aspectRatio: '2/3', 
-                                        objectFit: 'cover',
-                                        borderTopLeftRadius: '0.5rem',
-                                        borderTopRightRadius: '0.5rem'
-                                      }}
-                                      loading="lazy"
-                                    />
+                                    {movie.poster_path ? (
+                                      <img 
+                                        src={`${IMAGE_BASE_URL}${movie.poster_path}`} 
+                                        alt={movie.title}
+                                        style={{ 
+                                          width: '120px', 
+                                          height: '180px', 
+                                          objectFit: 'cover',
+                                          borderTopLeftRadius: '0.5rem',
+                                          borderTopRightRadius: '0.5rem',
+                                          display: 'block'
+                                        }}
+                                        loading="lazy"
+                                      />
+                                    ) : (
+                                      <div 
+                                        style={{ 
+                                          width: '120px', 
+                                          height: '180px', 
+                                          backgroundColor: '#f8f9fa',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          borderTopLeftRadius: '0.5rem',
+                                          borderTopRightRadius: '0.5rem',
+                                          border: '1px solid #dee2e6'
+                                        }}
+                                      >
+                                        <div className="text-center text-muted">
+                                          <i className="fas fa-image mb-2" style={{ fontSize: '24px' }}></i>
+                                          <div style={{ fontSize: '10px' }}>No Poster</div>
+                                        </div>
+                                      </div>
+                                    )}
                                     <div className="position-absolute top-0 end-0 m-2 bg-dark bg-opacity-75 text-white rounded-circle d-flex align-items-center justify-content-center" 
                                       style={{ 
                                         width: '28px', 
@@ -476,7 +497,7 @@ export default function MovieModal() {
                                         fontSize: '10px',
                                         fontWeight: 'bold'
                                       }}>
-                                      {movie.vote_average ? Math.round(movie.vote_average * 10) + '%' : 'NR'}
+                                      {movie.vote_average ? Math.round(movie.vote_average * 10) + '%' : 'NA'}
                                     </div>
                                     <div className="p-2 bg-white" style={{ 
                                       borderBottomLeftRadius: '0.5rem',
@@ -486,11 +507,11 @@ export default function MovieModal() {
                                       flexDirection: 'column',
                                       justifyContent: 'space-between'
                                     }}>
-                                      <div className="small fw-medium text-truncate" title={movie.title}>
+                                      <div className="small fw-medium text-truncate text-black" title={movie.title}>
                                         {movie.title}
                                       </div>
                                       <div className="d-flex justify-content-between align-items-center mt-1">
-                                        <small className="text-muted">
+                                        <small className="text-black">
                                           {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
                                         </small>
                                         <button 
@@ -554,19 +575,40 @@ export default function MovieModal() {
                                       boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
                                     }
                                   }}>
-                                    <img 
-                                      src={movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : 'https://via.placeholder.com/200x300?text=No+Poster'} 
-                                      alt={movie.title}
-                                      className="img-fluid"
-                                      style={{ 
-                                        width: '100%', 
-                                        aspectRatio: '2/3', 
-                                        objectFit: 'cover',
-                                        borderTopLeftRadius: '0.5rem',
-                                        borderTopRightRadius: '0.5rem'
-                                      }}
-                                      loading="lazy"
-                                    />
+                                    {movie.poster_path ? (
+                                      <img 
+                                        src={`${IMAGE_BASE_URL}${movie.poster_path}`} 
+                                        alt={movie.title}
+                                        style={{ 
+                                          width: '120px', 
+                                          height: '180px', 
+                                          objectFit: 'cover',
+                                          borderTopLeftRadius: '0.5rem',
+                                          borderTopRightRadius: '0.5rem',
+                                          display: 'block'
+                                        }}
+                                        loading="lazy"
+                                      />
+                                    ) : (
+                                      <div 
+                                        style={{ 
+                                          width: '120px', 
+                                          height: '180px', 
+                                          backgroundColor: '#f8f9fa',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          borderTopLeftRadius: '0.5rem',
+                                          borderTopRightRadius: '0.5rem',
+                                          border: '1px solid #dee2e6'
+                                        }}
+                                      >
+                                        <div className="text-center text-muted">
+                                          <i className="fas fa-image mb-2" style={{ fontSize: '24px' }}></i>
+                                          <div style={{ fontSize: '10px' }}>No Poster</div>
+                                        </div>
+                                      </div>
+                                    )}
                                     <div className="position-absolute top-0 end-0 m-2 bg-dark bg-opacity-75 text-white rounded-circle d-flex align-items-center justify-content-center" 
                                       style={{ 
                                         width: '28px', 
