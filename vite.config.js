@@ -35,7 +35,7 @@ export default defineConfig(({ command }) => {
       strictPort: true,
     },
     build: {
-      target: 'esnext',
+      target: 'es2015',
       sourcemap: false,
       // Use default esbuild minifier on Vercel
     },
