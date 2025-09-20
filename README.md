@@ -4,14 +4,10 @@ Discover movies, organize what to watch, track what you’ve watched, and save f
 
 ## Overview
 
-GreatMovies is a React-based movie browser with personal lists and theming. It integrates with a movie API to search and discover titles and lets you manage three collections: Watchlist, Watched, and Favorites. Everything persists locally so your selections remain between sessions.
+GreatMovies is a React-based movie browser with personal lists and theming. It integrates with a movie API to search and discover titles and lets you manage three collections: Watchlist, Watched, and Favorites. Everything persists locally so your selections remain as long as your browser history is intact.
 
 ## Key Features
 
-- **Cloudflare Worker Proxy (critical)**
-  - some network internet service pfrovider like Jio blocked tmdb.com and its api, any user using jio network isp will not be able to use this app. so used cloudfare proxy method to solve this issue.
-  - Routes API calls and images through a Cloudflare Worker to keep your TMDB key off the client.
-  - Configure `VITE_TMDB_PROXY_URL` for TMDB v3 and `VITE_TMDB_IMAGE_PROXY` for images. See “Cloudflare Worker Setup” below.
 
 - **Search & Discover**
   - Type-to-search with debouncing to avoid flicker and excess calls.
@@ -30,7 +26,6 @@ GreatMovies is a React-based movie browser with personal lists and theming. It i
 
 - **Theming**
   - Light/Dark theme toggle in `App.jsx` and `Header.jsx`.
-  - Theme is written to `<html data-theme>` .
 
 - **Pages & Routing** (React Router)
   - `/` Discover & Search (`Home.jsx`).
@@ -46,6 +41,11 @@ GreatMovies is a React-based movie browser with personal lists and theming. It i
   - Cards with quick actions for lists (`MovieCard.jsx`).
   - A movie modal with rich details (`MovieModal.jsx`).
   - Inline notifications/toasts (`Toaster.jsx`).
+
+- **Cloudflare Worker Proxy**
+  - some network internet service provider like Jio blocked tmdb.com and its api, any user using jio network isp will not be able to use this app. so used cloudfare proxy method to solve this issue.
+  - Routes API calls and images through a Cloudflare Worker to keep your TMDB key off the client.
+  - Configure `VITE_TMDB_PROXY_URL` for TMDB v3 and `VITE_TMDB_IMAGE_PROXY` for images. See “Cloudflare Worker Setup” below.
 
 - **Resilience & UX touches**
   - Graceful loading and skeletons on the grid.
