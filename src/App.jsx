@@ -11,6 +11,7 @@ import Favorites from './pages/Favorites.jsx'
 import Trending from './pages/Trending.jsx'
 import NowPlaying from './pages/NowPlaying.jsx'
 import AllTimeGreatest from './pages/AllTimeGreatest.jsx'
+import LuckyWheel from './pages/LuckyWheel.jsx'
 import NotFound from './pages/NotFound.jsx'
 import './App.css'
 import Footer from './components/Footer.jsx'
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="/trending" element={<Trending />} />
             <Route path="/now-playing" element={<NowPlaying />} />
             <Route path="/greatest" element={<AllTimeGreatest />} />
+            <Route path="/lucky-wheel" element={<LuckyWheel />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
