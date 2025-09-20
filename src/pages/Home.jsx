@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { discoverMovies, getGenres, searchMovies, getNowPlaying } from '../services/tmdb'
 import MovieCard from '../components/MovieCard'
-
+ 
 export default function Home() {
   const [genres, setGenres] = useState([])
   const [years, setYears] = useState([])
@@ -284,6 +285,9 @@ export default function Home() {
       <div className="container-fluid px-2 px-sm-3">
         <div className="text-center mb-4">
           <h1 className="display-4 fw-bold text-gradient mb-3">Discover Movies</h1>
+          <Link to="/lucky-wheel" className="btn btn-primary btn-lg mb-3 lucky-wheel-btn">
+            <i className="fas fa-dice me-2"></i>Click for Lucky Wheel
+          </Link>
           <p className="lead text-muted">Find your next favorite Movies from any language</p>
         </div>
 
@@ -448,6 +452,41 @@ export default function Home() {
           <p className="mt-3 text-muted">Loading movies...</p>
         </div>
       </div>
+
+      <style jsx>{`
+        .lucky-wheel-btn {
+          background: linear-gradient(45deg, #FFD700, #FFA500, #FF6347, #FF1493) !important;
+          background-size: 200% 200% !important;
+          border: none !important;
+          color: #000 !important;
+          font-weight: bold !important;
+          text-transform: uppercase !important;
+          letter-spacing: 1px !important;
+          box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4) !important;
+          transition: all 0.3s ease !important;
+          animation: shimmer 3s ease-in-out infinite !important;
+          font-size: 1.2rem !important;
+          padding: 1rem 2rem !important;
+        }
+        
+        .lucky-wheel-btn:hover {
+          opacity: 0.7 !important;
+          transform: translateY(-2px) !important;
+          box-shadow: 0 12px 35px rgba(255, 215, 0, 0.6) !important;
+        }
+        
+        @media (max-width: 768px) {
+          .lucky-wheel-btn {
+            font-size: 0.9rem !important;
+            padding: 0.6rem 1rem !important;
+          }
+        }
+        
+        @keyframes shimmer {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+      `}</style>
     </div>
   )
 }
