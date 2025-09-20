@@ -75,7 +75,7 @@ export default function Watched() {
               </li>
             </ul>
           </nav>
-          <div className="text-muted small">
+          <div className=" small">
             Page {page} of {totalPages}
           </div>
         </div>
