@@ -77,8 +77,8 @@ export default function LuckyWheel() {
         switch (selectedYearRange) {
           case 'old':
             // Before 1990
-            params.primary_release_year_lte = 1989
             params.primary_release_year_gte = 1950
+            params.primary_release_year_lte = 1989
             break
           case 'medium':
             // 1990-2010
@@ -99,7 +99,14 @@ export default function LuckyWheel() {
       // Select a random movie from results
       if (response.results && response.results.length > 0) {
         const validMovies = response.results.filter(movie =>
-          movie && movie.id && movie.title && movie.poster_path
+          movie && 
+          movie.id && 
+          movie.title && 
+          movie.poster_path &&
+          movie.overview && 
+          movie.overview.length > 10 &&
+          movie.vote_count >= 10 &&
+          movie.release_date
         )
 
         if (validMovies.length > 0) {
