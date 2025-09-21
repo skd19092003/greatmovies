@@ -116,19 +116,30 @@ export async function discoverMovies({
   sort_by = 'popularity.desc', 
   with_genres = '', 
   primary_release_year = '',
+  primary_release_year_gte = '',
+  primary_release_year_lte = '',
   with_original_language = '',
   with_watch_providers = '',
   with_keywords = '',
-  watch_region = 'IN' 
+  watch_region = 'IN',
+  vote_average_gte = '',
+  
+  // eslint-disable-next-line no-unused-vars
+  include_adult = false,
+  // eslint-disable-next-line no-unused-vars
+  include_video = false
 } = {}, opts = {}) {
   const params = {
     sort_by,
     page,
     ...(with_genres && { with_genres }),
     ...(primary_release_year && { primary_release_year }),
+    ...(primary_release_year_gte && { 'primary_release_date.gte': `${primary_release_year_gte}-01-01` }),
+    ...(primary_release_year_lte && { 'primary_release_date.lte': `${primary_release_year_lte}-12-31` }),
     ...(with_original_language && { with_original_language }),
     ...(with_watch_providers && { with_watch_providers }),
     ...(with_keywords && { with_keywords }),
+    ...(vote_average_gte && { 'vote_average.gte': vote_average_gte }),
     watch_region,
     include_adult: false,
     include_video: false
