@@ -40,6 +40,15 @@ export default function MovieModal() {
       const id = e?.detail?.id
       if (!id) return
       setOpenId(id)
+      
+      // Show modal immediately for better perceived performance
+      setTimeout(() => {
+        const el = document.getElementById('movieModal')
+        if (el && window.bootstrap?.Modal) {
+          const modal = window.bootstrap.Modal.getOrCreateInstance(el)
+          modal.show()
+        }
+      }, 0)
     }
     window.addEventListener('open-movie-modal', handler)
     return () => window.removeEventListener('open-movie-modal', handler)
@@ -82,11 +91,9 @@ export default function MovieModal() {
             buy: regionData.buy || [],
             link: regionData.link || '',
           })
-          // Show Bootstrap modal
+          // Modal is already shown, just add cleanup listener
           const el = document.getElementById('movieModal')
-          if (el && window.bootstrap?.Modal) {
-            const modal = window.bootstrap.Modal.getOrCreateInstance(el)
-            modal.show()
+          if (el) {
             // cleanup state when hidden
             el.addEventListener('hidden.bs.modal', () => {
               setDetails(null)
