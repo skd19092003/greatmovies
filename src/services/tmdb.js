@@ -44,7 +44,7 @@ function withKeyFor(base, url) {
 // - options: { timeout?: number, signal?: AbortSignal, ...fetchOptions }
 // Returns: Response (or throws on abort/network error)
 async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 10000, signal } = options
+  const { timeout = 15000, signal } = options
   const controller = new AbortController()
 
   if (signal) {
