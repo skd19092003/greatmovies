@@ -155,10 +155,6 @@ VITE_TMDB_IMAGE_PROXY=https://your-worker.workers.dev/image
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
 - [The Movie Database (TMDB)](https://www.themoviedb.org/) for providing comprehensive movie data
