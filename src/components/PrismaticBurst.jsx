@@ -210,7 +210,9 @@ const PrismaticBurst = ({
   offset = { x: 0, y: 0 },
   hoverDampness = 0,
   rayCount,
-  mixBlendMode = 'lighten'
+  mixBlendMode = 'lighten',
+  // limit device pixel ratio for low-power/low-bandwidth devices
+  maxDpr = 2
 }) => {
   const containerRef = useRef(null);
   const programRef = useRef(null);
@@ -235,7 +237,7 @@ const PrismaticBurst = ({
     const container = containerRef.current;
     if (!container) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
     const renderer = new Renderer({
       dpr,
       alpha: false,
@@ -249,6 +251,8 @@ const PrismaticBurst = ({
     gl.canvas.style.width = '100%';
     gl.canvas.style.height = '100%';
     gl.canvas.style.mixBlendMode = mixBlendMode && mixBlendMode !== 'none' ? mixBlendMode : '';
+  // Ensure canvas doesn't intercept pointer events so UI interactions remain snappy
+  gl.canvas.style.pointerEvents = 'none';
     container.appendChild(gl.canvas);
 
     const white = new Uint8Array([255, 255, 255, 255]);
@@ -341,12 +345,17 @@ const PrismaticBurst = ({
       const dt = Math.max(0, now - last) * 0.001;
       last = now;
       const visible = isVisibleRef.current && !document.hidden;
-      if (!pausedRef.current) accumTime += dt;
 
-      if (!visible) {
+      // If paused by prop or not visible, skip the expensive render step entirely.
+      // This prevents GPU work and stops jank on low-end devices or when user
+      // wants to reduce animations.
+      if (pausedRef.current || !visible) {
+        if (!pausedRef.current) accumTime += dt; // keep time flowing if not explicitly paused
         raf = requestAnimationFrame(update);
         return;
       }
+
+      if (!pausedRef.current) accumTime += dt;
 
       const tau = 0.02 + Math.max(0, Math.min(1, hoverDampRef.current)) * 0.5;
       const alpha = 1 - Math.exp(-dt / tau);

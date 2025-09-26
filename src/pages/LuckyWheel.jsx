@@ -15,6 +15,8 @@ export default function LuckyWheel() {
   const [showResult, setShowResult] = useState(false)
   const [spinning, setSpinning] = useState(false)
   const [backgroundLoaded, setBackgroundLoaded] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState(false)
+  const [maxDpr, setMaxDpr] = useState(2)
 
   // Load genres on component mount
   useEffect(() => {
@@ -28,6 +30,33 @@ export default function LuckyWheel() {
       setBackgroundLoaded(true)
     }) // 10 milliseconds delay
     return () => clearTimeout(timer)
+  }, [])
+
+  // Detect slow network / low-end device and reduce animation work by default
+  useEffect(() => {
+    try {
+      const nav = navigator;
+      // NetworkInformation API
+      // effectiveType: 'slow-2g' | '2g' | '3g' | '4g'
+      const connection = nav && nav.connection;
+      if (connection && connection.effectiveType) {
+        const et = connection.effectiveType;
+        if (et === '2g' || et === 'slow-2g' || et === '3g') {
+          setReduceMotion(true)
+          setMaxDpr(1)
+        }
+        // If on 4g but downlink is small, also reduce
+        if (et === '4g' && connection.downlink && connection.downlink < 0.5) {
+          setReduceMotion(true)
+          setMaxDpr(1)
+        }
+      }
+      // Prefer reduced motion user setting
+      const prefers = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefers) setReduceMotion(true)
+    } catch {
+      // ignore
+    }
   }, [])
 
   const spinWheel = async () => {
@@ -162,16 +191,17 @@ export default function LuckyWheel() {
         zIndex: 1 
       }}>
         <PrismaticBurst
-          animationType="rotate3d"
-          intensity={0.8}
-          speed={0.1}
-          distort={0.3}
-          paused={false}
+          animationType={reduceMotion ? 'rotate' : 'rotate3d'}
+          intensity={reduceMotion ? 0.25 : 0.8}
+          speed={reduceMotion ? 0.04 : 0.1}
+          distort={reduceMotion ? 0.05 : 0.3}
+          paused={reduceMotion}
           offset={{ x: 0, y: 0 }}
-          hoverDampness={0.4}
-          rayCount={12}
+          hoverDampness={reduceMotion ? 0 : 0.4}
+          rayCount={reduceMotion ? 0 : 12}
           mixBlendMode="overlay"
           colors={['#FFD700ff', '#FFA500ff', '#4169E1ff', '#1E90FFff', '#FFFF00ff', '#0066CCff']}
+          maxDpr={maxDpr}
         />
       </div>
 
@@ -205,6 +235,18 @@ export default function LuckyWheel() {
             <p className="lead text-white mb-0">
               Answer a few questions and let fate choose your next movie!
             </p>
+            {/* Small control to toggle background effect for performance */}
+            <div className="mt-2 small text-white">
+              <label style={{ cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={reduceMotion}
+                  onChange={(e) => setReduceMotion(e.target.checked)}
+                  style={{ marginRight: '0.5rem' }}
+                />
+                Reduce animations (improves performance on slow networks)
+              </label>
+            </div>
           </div>
 
           {/* Corner Questions and Center Controls */}
