@@ -17,6 +17,7 @@ export default function LuckyWheel() {
   const [backgroundLoaded, setBackgroundLoaded] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
   const [maxDpr, setMaxDpr] = useState(2)
+  const [showBackground, setShowBackground] = useState(false)
 
   // Load genres on component mount
   useEffect(() => {
@@ -57,6 +58,24 @@ export default function LuckyWheel() {
     } catch {
       // ignore
     }
+  }, [])
+
+  // Show PrismaticBurst only on wider viewports (>= 760px)
+  useEffect(() => {
+    const check = () => {
+      try {
+        const w = window.innerWidth || document.documentElement.clientWidth || 0;
+        setShowBackground(w >= 760);
+        // also reduce DPR on small screens to be safe
+        if (w < 1200) setMaxDpr(1);
+        else setMaxDpr(2);
+      } catch {
+        setShowBackground(false);
+      }
+    }
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
   }, [])
 
   const spinWheel = async () => {
@@ -188,21 +207,24 @@ export default function LuckyWheel() {
         left: 0, 
         width: '100vw', 
         height: '100vh', 
-        zIndex: 1 
+        zIndex: 1, 
+        background: showBackground ? 'transparent' : '#000'
       }}>
-        <PrismaticBurst
-          animationType={reduceMotion ? 'rotate' : 'rotate3d'}
-          intensity={reduceMotion ? 0.25 : 0.8}
-          speed={reduceMotion ? 0.04 : 0.1}
-          distort={reduceMotion ? 0.05 : 0.3}
-          paused={reduceMotion}
-          offset={{ x: 0, y: 0 }}
-          hoverDampness={reduceMotion ? 0 : 0.4}
-          rayCount={reduceMotion ? 0 : 12}
-          mixBlendMode="overlay"
-          colors={['#FFD700ff', '#FFA500ff', '#4169E1ff', '#1E90FFff', '#FFFF00ff', '#0066CCff']}
-          maxDpr={maxDpr}
-        />
+        {showBackground && (
+          <PrismaticBurst
+            animationType={reduceMotion ? 'rotate' : 'rotate3d'}
+            intensity={reduceMotion ? 0.25 : 0.8}
+            speed={reduceMotion ? 0.04 : 0.1}
+            distort={reduceMotion ? 0.05 : 0.3}
+            paused={reduceMotion}
+            offset={{ x: 0, y: 0 }}
+            hoverDampness={reduceMotion ? 0 : 0.4}
+            rayCount={reduceMotion ? 0 : 12}
+            mixBlendMode="overlay"
+            colors={['#FFD700ff', '#FFA500ff', '#4169E1ff', '#1E90FFff', '#FFFF00ff', '#0066CCff']}
+            maxDpr={maxDpr}
+          />
+        )}
       </div>
 
       <div id="lucky-wheel-page" className="page-content" style={{
@@ -235,18 +257,7 @@ export default function LuckyWheel() {
             <p className="lead text-white mb-0">
               Answer a few questions and let fate choose your next movie!
             </p>
-            {/* Small control to toggle background effect for performance */}
-            <div className="mt-2 small text-white">
-              <label style={{ cursor: 'pointer' }}>
-                <input
-                  type="checkbox"
-                  checked={reduceMotion}
-                  onChange={(e) => setReduceMotion(e.target.checked)}
-                  style={{ marginRight: '0.5rem' }}
-                />
-                Reduce animations (improves performance on slow networks)
-              </label>
-            </div>
+            
           </div>
 
           {/* Corner Questions and Center Controls */}
