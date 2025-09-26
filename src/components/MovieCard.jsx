@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { IMAGE_BASE_URL, getMovieVideos } from '../services/tmdb'
 import { useMovies } from '../contexts/MovieContext.jsx'
 
@@ -6,6 +7,17 @@ export default function MovieCard({ movie, showReleaseDate = false, index = 0 })
   const inWatchlist = !!watchlist.find((m) => m.id === movie.id)
   const inWatched = !!watched.find((m) => m.id === movie.id)
   const inFavorite = !!favorites.find((m) => m.id === movie.id)
+
+  const [imageSrc, setImageSrc] = useState(`${IMAGE_BASE_URL}${movie.poster_path}`)
+  const [imageError, setImageError] = useState(false)
+
+  const handleImageError = () => {
+    if (!imageError && import.meta.env.VITE_TMDB_IMAGE_PROXY) {
+      // Try proxy if direct failed and proxy is configured
+      setImageSrc(`${import.meta.env.VITE_TMDB_IMAGE_PROXY}/t/p/w342${movie.poster_path}`)
+      setImageError(true)
+    }
+  }
 
   const onOpen = () => {
     window.dispatchEvent(new CustomEvent('open-movie-modal', { detail: { id: movie.id } }))
@@ -34,7 +46,7 @@ export default function MovieCard({ movie, showReleaseDate = false, index = 0 })
     <div className="movie-card" title={movie.title}>
       <div className="movie-poster-container">
         {movie.poster_path ? (
-          <img className="movie-poster" src={`${IMAGE_BASE_URL}${movie.poster_path}`} alt={movie.title} loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} sizes="280px" />
+          <img className="movie-poster" src={imageSrc} alt={movie.title} loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} sizes="280px" onError={handleImageError} />
         ) : (
           <div className="movie-poster d-flex align-items-center justify-content-center" style={{ background: 'var(--background-color-offset)' }}>No Image</div>
         )}

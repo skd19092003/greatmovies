@@ -23,8 +23,8 @@ function getBases() {
 
 // Image base URLs (host can be proxied via VITE_TMDB_IMAGE_PROXY)
 // Example proxy: https://your-worker.example.workers.dev/image
-const IMAGE_HOST = import.meta.env.VITE_TMDB_IMAGE_PROXY || 'https://image.tmdb.org'
-export const IMAGE_BASE_URL = `${IMAGE_HOST}/t/p/w500`
+const IMAGE_HOST = 'https://image.tmdb.org'
+export const IMAGE_BASE_URL = `${IMAGE_HOST}/t/p/w342`
 export const BACKDROP_BASE_URL = `${IMAGE_HOST}/t/p/w1280`
 
 // Append the API key as a query parameter to a URL for a specific base
