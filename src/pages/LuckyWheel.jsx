@@ -215,10 +215,11 @@ export default function LuckyWheel() {
                 {/* Top Left Corner - Genre */}
                 <div className="corner-question top-left">
                   <div className="question-card">
-                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }}>
+                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }} htmlFor="genre-select">
                       <i className="fas fa-film me-2"></i>Preferred Genre:
                     </label>
                     <select
+                      id="genre-select"
                       className="form-select"
                       value={selectedGenre}
                       onChange={(e) => setSelectedGenre(e.target.value)}
@@ -234,10 +235,11 @@ export default function LuckyWheel() {
                 {/* Bottom Left Corner - Time Period */}
                 <div className="corner-question bottom-left">
                   <div className="question-card">
-                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }}>
+                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }} htmlFor="year-select">
                       <i className="fas fa-calendar me-2"></i>Time Period:
                     </label>
                     <select
+                      id="year-select"
                       className="form-select"
                       value={selectedYearRange}
                       onChange={(e) => setSelectedYearRange(e.target.value)}
@@ -256,10 +258,11 @@ export default function LuckyWheel() {
                 <div className="center-content">
                   {/* Rating Slider */}
                   <div className="mb-4">
-                    <label className="form-label fw-semibold mb-2 text-center d-block" style={{ color: '#fff' }}>
+                    <label className="form-label fw-semibold mb-2 text-center d-block" style={{ color: '#fff' }} htmlFor="rating-slider">
                       <i className="fas fa-star me-2"></i>Minimum Rating: {minRating.toFixed(1)}
                     </label>
                     <input
+                      id="rating-slider"
                       type="range"
                       className="form-range"
                       min="0"
@@ -309,10 +312,11 @@ export default function LuckyWheel() {
                 {/* Top Right Corner - Language */}
                 <div className="corner-question top-right">
                   <div className="question-card">
-                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }}>
+                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }} htmlFor="language-select">
                       <i className="fas fa-language me-2"></i>Language:
                     </label>
                     <select
+                      id="language-select"
                       className="form-select"
                       value={selectedLanguage}
                       onChange={(e) => setSelectedLanguage(e.target.value)}
@@ -334,10 +338,11 @@ export default function LuckyWheel() {
                 {/* Bottom Right Corner - Quality */}
                 <div className="corner-question bottom-right">
                   <div className="question-card">
-                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }}>
+                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }} htmlFor="quality-select">
                       <i className="fas fa-award me-2"></i>Quality Preference:
                     </label>
                     <select
+                      id="quality-select"
                       className="form-select"
                       value={selectedQuality}
                       onChange={(e) => setSelectedQuality(e.target.value)}

@@ -1,20 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense, lazy } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Header from './components/Header.jsx'
 import MovieModal from './components/MovieModal.jsx'
 import { MovieProvider } from './contexts/MovieContext.jsx'
 import Toaster from './components/Toaster.jsx'
-import Home from './pages/Home.jsx'
-import Watchlist from './pages/Watchlist.jsx'
-import Watched from './pages/Watched.jsx'
-import Favorites from './pages/Favorites.jsx'
-import Trending from './pages/Trending.jsx'
-import NowPlaying from './pages/NowPlaying.jsx'
-import AllTimeGreatest from './pages/AllTimeGreatest.jsx'
-import LuckyWheel from './pages/LuckyWheel.jsx'
-import NotFound from './pages/NotFound.jsx'
 import './App.css'
 import Footer from './components/Footer.jsx'
+
+// Lazy load pages
+const Home = lazy(() => import('./pages/Home.jsx'))
+const Watchlist = lazy(() => import('./pages/Watchlist.jsx'))
+const Watched = lazy(() => import('./pages/Watched.jsx'))
+const Favorites = lazy(() => import('./pages/Favorites.jsx'))
+const Trending = lazy(() => import('./pages/Trending.jsx'))
+const NowPlaying = lazy(() => import('./pages/NowPlaying.jsx'))
+const AllTimeGreatest = lazy(() => import('./pages/AllTimeGreatest.jsx'))
+const LuckyWheel = lazy(() => import('./pages/LuckyWheel.jsx'))
+const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 export default function App() {
   const [theme, setTheme] = useState('dark')
@@ -42,17 +44,19 @@ export default function App() {
       <div>
         <Header theme={theme} onToggleTheme={toggleTheme} />
         <main className="container mt-4">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/watchlist" element={<Watchlist />} />
-            <Route path="/watched" element={<Watched />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/trending" element={<Trending />} />
-            <Route path="/now-playing" element={<NowPlaying />} />
-            <Route path="/greatest" element={<AllTimeGreatest />} />
-            <Route path="/lucky-wheel" element={<LuckyWheel />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<div className="text-center mt-5"><div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div></div>}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/watchlist" element={<Watchlist />} />
+              <Route path="/watched" element={<Watched />} />
+              <Route path="/favorites" element={<Favorites />} />
+              <Route path="/trending" element={<Trending />} />
+              <Route path="/now-playing" element={<NowPlaying />} />
+              <Route path="/greatest" element={<AllTimeGreatest />} />
+              <Route path="/lucky-wheel" element={<LuckyWheel />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </main>
         <MovieModal />
         <Toaster />

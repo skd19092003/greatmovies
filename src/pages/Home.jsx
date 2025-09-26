@@ -314,7 +314,7 @@ export default function Home() {
         <div className="row g-2 mb-3">
           {/* Genre */}
           <div className="col-6 col-md-2">
-            <select className="form-select" value={genre} onChange={handleGenreChange}>
+            <select className="form-select" value={genre} onChange={handleGenreChange} aria-label="Select Genre">
               <option value="">All Genres</option>
               {genres.map((g) => (
                 <option key={g.id} value={g.id}>{g.name}</option>
@@ -324,7 +324,7 @@ export default function Home() {
 
           {/* Year */}
           <div className="col-6 col-md-2">
-            <select className="form-select" value={year} onChange={handleYearChange}>
+            <select className="form-select" value={year} onChange={handleYearChange} aria-label="Select Year">
               <option value="">All Years</option>
               {years.map((y) => (
                 <option key={y} value={y}>{y}</option>
@@ -334,7 +334,7 @@ export default function Home() {
 
           {/* Language */}
           <div className="col-6 col-md-2">
-            <select className="form-select" value={language} onChange={handleLanguageChange}>
+            <select className="form-select" value={language} onChange={handleLanguageChange} aria-label="Select Language">
               <option value="">All Languages</option>
               {languages.map((lang) => (
                 <option key={lang.iso_639_1} value={lang.iso_639_1}>{lang.english_name}</option>
@@ -344,7 +344,7 @@ export default function Home() {
 
           {/* Streaming */}
           <div className="col-6 col-md-2">
-            <select className="form-select" value={selectedProvider} onChange={handleProviderChange}>
+            <select className="form-select" value={selectedProvider} onChange={handleProviderChange} aria-label="Select Streaming Service">
               <option value="">All Services</option>
               {watchProviders.map((provider) => (
                 <option key={provider.provider_id} value={provider.provider_id}>
@@ -360,6 +360,7 @@ export default function Home() {
               className="form-select" 
               value={sort} 
               onChange={(e) => setSort(e.target.value)}
+              aria-label="Sort Movies"
             >
               <option value="">Sort By</option>
               <option value="highest_grossing">Highest Grossing</option>
@@ -387,7 +388,7 @@ export default function Home() {
             </button>
           </div>
         )}
-        <div id="movie-box" className="movie-grid">
+        <div id="movie-box" className="movie-grid" style={{ minHeight: '1200px' }}>
           {loading && movies.length === 0 && (
             Array.from({ length: 12 }).map((_, i) => (
               <div key={`skeleton-${i}`} className="movie-card placeholder-wave">
@@ -439,7 +440,7 @@ export default function Home() {
               </li>
             </ul>
           </nav>
-          <div className="text-muted small">
+          <div className="text-muted small" style={{ minWidth: '80px', textAlign: 'center' }}>
             Page {page} of {totalPages}
           </div>
         </div>

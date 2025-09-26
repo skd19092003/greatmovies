@@ -83,7 +83,7 @@
     --background-color: #c7dae8;
     --background-color-offset: #73a6ca;
     --text-color: #24292f;
-    --text-color-muted: #57606a;
+    --text-color-muted: #2c3e50;
     --border-color: #d0d7de;
     --card-bg: #ffffff;
 }
@@ -399,6 +399,7 @@ body {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    min-height: 250px;
 }
 
 /* --- Movie Title ---
@@ -408,6 +409,12 @@ body {
     font-weight: 600;
     margin-bottom: 0.5rem;
     flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* --- Movie Meta Info (Rating/Year) ---
