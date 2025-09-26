@@ -40,6 +40,15 @@ export default function MovieModal() {
       const id = e?.detail?.id
       if (!id) return
       setOpenId(id)
+      
+      // Show modal immediately for better perceived performance
+      setTimeout(() => {
+        const el = document.getElementById('movieModal')
+        if (el && window.bootstrap?.Modal) {
+          const modal = window.bootstrap.Modal.getOrCreateInstance(el)
+          modal.show()
+        }
+      }, 0)
     }
     window.addEventListener('open-movie-modal', handler)
     return () => window.removeEventListener('open-movie-modal', handler)
@@ -82,25 +91,24 @@ export default function MovieModal() {
             buy: regionData.buy || [],
             link: regionData.link || '',
           })
-          // Show Bootstrap modal
-          const el = document.getElementById('movieModal')
-          if (el && window.bootstrap?.Modal) {
-            const modal = window.bootstrap.Modal.getOrCreateInstance(el)
-            modal.show()
-            // cleanup state when hidden
-            el.addEventListener('hidden.bs.modal', () => {
-              setDetails(null)
-              setVideos([])
-              setOpenId(null)
-              setError('')
-            }, { once: true })
-          }
+        }
+        
+        // Modal is already shown, add cleanup listener regardless of success/failure
+        const el = document.getElementById('movieModal')
+        if (el) {
+          // cleanup state when hidden
+          el.addEventListener('hidden.bs.modal', () => {
+            setDetails(null)
+            setVideos([])
+            setOpenId(null)
+            setError('')
+          }, { once: true })
         }
       } catch {
         if (!ignore) {
           setDetails(null)
           setVideos([])
-          setError('Failed to load movie details.')
+          setError('Failed to load movie details. Network error - Timed out ')
         }
       } finally {
         if (!ignore) setLoading(false)
@@ -676,7 +684,7 @@ export default function MovieModal() {
                 </div>
               )}
               {!loading && !details && (
-                <div className="text-center py-5">No details found.</div>
+                <div className="text-center py-5">Check Network Connection & Refresh the Page.</div>
               )}
             </div>
           </div>

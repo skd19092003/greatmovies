@@ -107,8 +107,8 @@ export default function AllTimeGreatest() {
         {movies.length === 0 && !loading && (
           <div className="text-center  py-5">No movies found</div>
         )}
-        {movies.map((m) => (
-          <MovieCard key={m.id} movie={m} />
+        {movies.map((m, index) => (
+          <MovieCard key={m.id} movie={m} index={index} />
         ))}
       </div>
 

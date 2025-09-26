@@ -40,8 +40,8 @@ export default function Watchlist() {
         {watchlist.length === 0 ? (
           <div className="text-center  py-5">No movies in your watch later list</div>
         ) : (
-          paginatedMovies.map((m) => (
-            <MovieCard key={m.id} movie={m} />
+          paginatedMovies.map((m, index) => (
+            <MovieCard key={m.id} movie={m} index={index} />
           ))
         )}
       </div>

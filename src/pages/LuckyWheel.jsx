@@ -11,7 +11,6 @@ export default function LuckyWheel() {
   const [selectedYearRange, setSelectedYearRange] = useState('')
   const [selectedQuality, setSelectedQuality] = useState('popular')
   const [loading, setLoading] = useState(false)
-  const [modalLoading, setModalLoading] = useState(false)
   const [randomMovie, setRandomMovie] = useState(null)
   const [showResult, setShowResult] = useState(false)
   const [spinning, setSpinning] = useState(false)
@@ -78,8 +77,8 @@ export default function LuckyWheel() {
         switch (selectedYearRange) {
           case 'old':
             // Before 1990
-            params.primary_release_year_lte = 1989
             params.primary_release_year_gte = 1950
+            params.primary_release_year_lte = 1989
             break
           case 'medium':
             // 1990-2010
@@ -100,7 +99,14 @@ export default function LuckyWheel() {
       // Select a random movie from results
       if (response.results && response.results.length > 0) {
         const validMovies = response.results.filter(movie =>
-          movie && movie.id && movie.title && movie.poster_path
+          movie && 
+          movie.id && 
+          movie.title && 
+          movie.poster_path &&
+          movie.overview && 
+          movie.overview.length > 10 &&
+          movie.vote_count >= 10 &&
+          movie.release_date
         )
 
         if (validMovies.length > 0) {
@@ -157,13 +163,13 @@ export default function LuckyWheel() {
       }}>
         <PrismaticBurst
           animationType="rotate3d"
-          intensity={1.7}
-          speed={0.2}
-          distort={0.6}
+          intensity={0.8}
+          speed={0.1}
+          distort={0.3}
           paused={false}
           offset={{ x: 0, y: 0 }}
-          hoverDampness={0.25}
-          rayCount={20}
+          hoverDampness={0.4}
+          rayCount={12}
           mixBlendMode="overlay"
           colors={['#FFD700ff', '#FFA500ff', '#4169E1ff', '#1E90FFff', '#FFFF00ff', '#0066CCff']}
         />
@@ -382,18 +388,12 @@ export default function LuckyWheel() {
                           <div className="d-flex gap-2 justify-content-center">
                             <button
                               onClick={() => {
-                                // Show modal loading state
-                                setModalLoading(true)
-                                // Trigger modal opening
                                 window.dispatchEvent(new CustomEvent('open-movie-modal', {
                                   detail: { id: randomMovie.id }
                                 }))
-                                // Hide loading after modal is opened
-                                setTimeout(() => {
-                                  setModalLoading(false)
-                                }, 1500)
                               }}
-                              className="btn btn-primary"
+                              className="btn btn-primary btn-responsive"
+                              disabled={loading}
                             >
                               <i className="fas fa-info-circle me-2"></i>View Details
                             </button>
@@ -425,18 +425,6 @@ export default function LuckyWheel() {
                     )}
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
-
-          {/* Modal Loading Overlay */}
-          {modalLoading && (
-            <div className="modal-loading-overlay">
-              <div className="loading-content">
-                <div className="spinner-border text-primary" style={{ width: '4rem', height: '4rem' }} role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
-                <p className="mt-2 text-white fs-5">Opening movie details...</p>
               </div>
             </div>
           )}
@@ -629,26 +617,19 @@ export default function LuckyWheel() {
           transform: scale(1.05);
         }
         
-        .modal-loading-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.8);
-          backdrop-filter: blur(10px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
+        .btn-responsive {
+          transition: all 0.15s ease-in-out;
+          transform: translateZ(0);
         }
         
-        .loading-content {
-          text-align: center;
-          background: rgba(255, 255, 255, 0.1);
-          padding: 1.5rem;
-          border-radius: 15px;
-          border: 1px solid rgba(255, 255, 255, 0.2);
+        .btn-responsive:hover {
+          transform: translateY(-1px) scale(1.02);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .btn-responsive:active {
+          transform: translateY(0) scale(0.98);
+          transition: all 0.05s ease-in-out;
         }
         
         /* Responsive Design */

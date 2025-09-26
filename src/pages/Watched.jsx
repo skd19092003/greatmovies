@@ -40,8 +40,8 @@ export default function Watched() {
         {watched.length === 0 ? (
           <div className="text-center py-5">No movies marked as watched</div>
         ) : (
-          paginatedMovies.map((m) => (
-            <MovieCard key={m.id} movie={m} />
+          paginatedMovies.map((m, index) => (
+            <MovieCard key={m.id} movie={m} index={index} />
           ))
         )}
       </div>

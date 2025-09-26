@@ -1,7 +1,7 @@
 import { IMAGE_BASE_URL, getMovieVideos } from '../services/tmdb'
 import { useMovies } from '../contexts/MovieContext.jsx'
 
-export default function MovieCard({ movie, showReleaseDate = false }) {
+export default function MovieCard({ movie, showReleaseDate = false, index = 0 }) {
   const { watchlist = [], watched = [], favorites = [], toggleWatchlist, toggleWatched, toggleFavorite } = useMovies() || {}
   const inWatchlist = !!watchlist.find((m) => m.id === movie.id)
   const inWatched = !!watched.find((m) => m.id === movie.id)
@@ -34,13 +34,13 @@ export default function MovieCard({ movie, showReleaseDate = false }) {
     <div className="movie-card" title={movie.title}>
       <div className="movie-poster-container">
         {movie.poster_path ? (
-          <img className="movie-poster" src={`${IMAGE_BASE_URL}${movie.poster_path}`} alt={movie.title} />
+          <img className="movie-poster" src={`${IMAGE_BASE_URL}${movie.poster_path}`} alt={movie.title} loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} sizes="280px" />
         ) : (
           <div className="movie-poster d-flex align-items-center justify-content-center" style={{ background: 'var(--background-color-offset)' }}>No Image</div>
         )}
       </div>
       <div className="movie-info">
-        <h3 className="movie-title">{movie.title}</h3>
+        <h2 className="movie-title">{movie.title}</h2>
         <div className="movie-meta">
           <div className="rating">
             <i className="fas fa-star"></i>
