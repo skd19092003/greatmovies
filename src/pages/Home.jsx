@@ -455,7 +455,7 @@ export default function Home() {
         </div>
       </div>
 
-      <style jsx>{`
+  <style>{`
         .lucky-wheel-btn {
           background: linear-gradient(45deg, #FFD700, #FFA500, #FF6347, #FF1493) !important;
           background-size: 200% 200% !important;
@@ -488,7 +488,7 @@ export default function Home() {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
         }
-      `}</style>
+  `}</style>
     </div>
   )
 }

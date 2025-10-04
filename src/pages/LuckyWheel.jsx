@@ -432,9 +432,9 @@ export default function LuckyWheel() {
 
         </div>
 
-        {/* Custom CSS for animations and responsive design */}
-        <style jsx>{`
-        /* Lucky Wheel Layout */}
+  {/* Custom CSS for animations and responsive design */}
+  <style>{`
+  /* Lucky Wheel Layout */
         .lucky-wheel-layout {
           position: relative;
           width: 100%;
