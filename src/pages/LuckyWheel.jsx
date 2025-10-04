@@ -70,19 +70,34 @@ export default function LuckyWheel() {
       if (selectedYearRange) {
         const currentYear = new Date().getFullYear()
         switch (selectedYearRange) {
+          case 'very_old':
+            // Before 1980
+            params.primary_release_year_gte = 1950
+            params.primary_release_year_lte = 1980
+            break
           case 'old':
             // Before 1990
-            params.primary_release_year_gte = 1950
-            params.primary_release_year_lte = 1989
+            params.primary_release_year_gte = 1980
+            params.primary_release_year_lte = 1990
+            break
+          case 'medium-old':
+            // 1990-2010
+            params.primary_release_year_gte = 1990
+            params.primary_release_year_lte = 2000
             break
           case 'medium':
             // 1990-2010
-            params.primary_release_year_gte = 1990
+            params.primary_release_year_gte = 2000
             params.primary_release_year_lte = 2010
             break
-          case 'new':
+          case 'medium-new':
             // 2010-current
             params.primary_release_year_gte = 2010
+            params.primary_release_year_lte = 2020
+            break
+          case 'new':
+            // 2020-current
+            params.primary_release_year_gte = 2020
             params.primary_release_year_lte = currentYear
             break
         }
@@ -220,9 +235,12 @@ export default function LuckyWheel() {
                       onChange={(e) => setSelectedYearRange(e.target.value)}
                     >
                       <option value="">Any Time Period</option>
-                      <option value="old">Old (Before 1990)</option>
-                      <option value="medium">Medium (1990-2010)</option>
-                      <option value="new">New (2010-Current)</option>
+                      <option value="very-old">Very Old (Before 1980)</option>
+                      <option value="old">Old (1980-1990)</option>
+                      <option value="medium-old">Medium Old (1990-2010)</option>
+                      <option value="medium">Medium (2000-2010)</option>
+                      <option value="medium-new">Medium New (2010-2020)</option>
+                      <option value="new">New (2020-Current)</option>
                     </select>
                   </div>
                 </div>
