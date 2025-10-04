@@ -763,7 +763,7 @@ export default function LuckyWheel() {
           /* removed invalid CSS-in-JS style key that had no effect here */
         }
         
-        @media (min-width: 768px) and (max-width: 999px) {
+        @media (min-width: 769px) and (max-width: 999px) {
           .lucky-wheel-layout {
             display: flex;
             flex-direction: column;
