@@ -43,7 +43,7 @@ export default function App() {
     <MovieProvider>
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <Header theme={theme} onToggleTheme={toggleTheme} />
-  <main className="container mt-4" style={{ flex: 1, paddingBottom: '6rem' }}>
+  <main className="container mt-4" style={{ flex: 1, paddingBottom: '15px' }}>
           <Suspense fallback={<div className="text-center mt-5"><div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div></div>}>
             <Routes>
               <Route path="/" element={<Home />} />
