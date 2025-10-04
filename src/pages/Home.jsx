@@ -121,7 +121,8 @@ export default function Home() {
       try {
         let data
         const effectiveCap = computePageCap()
-        const baseTimeout = effectiveCap < 50 ? 8000 : 10000
+        //here we set timeout based on cap which will indirectly reflect network/device quality
+        const baseTimeout = effectiveCap < 50 ? 12000 : 15000
         const opts = { signal: controller.signal, timeout: baseTimeout }
 
         if (debouncedQuery) {

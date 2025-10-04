@@ -1,4 +1,3 @@
-import PrismaticBurst from '../components/PrismaticBurst';
 import { useEffect, useState } from 'react'
 import { discoverMovies, getGenres } from '../services/tmdb'
 import MovieModal from '../components/MovieModal'
@@ -14,10 +13,7 @@ export default function LuckyWheel() {
   const [randomMovie, setRandomMovie] = useState(null)
   const [showResult, setShowResult] = useState(false)
   const [spinning, setSpinning] = useState(false)
-  const [backgroundLoaded, setBackgroundLoaded] = useState(false)
-  const [reduceMotion, setReduceMotion] = useState(false)
-  const [maxDpr, setMaxDpr] = useState(2)
-  const [showBackground, setShowBackground] = useState(false)
+
 
   // Load genres on component mount
   useEffect(() => {
@@ -25,58 +21,9 @@ export default function LuckyWheel() {
     getGenres().then(setGenres)
   }, [])
 
-  // Simulate background loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setBackgroundLoaded(true)
-    }) // 10 milliseconds delay
-    return () => clearTimeout(timer)
-  }, [])
+ 
 
-  // Detect slow network / low-end device and reduce animation work by default
-  useEffect(() => {
-    try {
-      const nav = navigator;
-      // NetworkInformation API
-      // effectiveType: 'slow-2g' | '2g' | '3g' | '4g'
-      const connection = nav && nav.connection;
-      if (connection && connection.effectiveType) {
-        const et = connection.effectiveType;
-        if (et === '2g' || et === 'slow-2g' || et === '3g') {
-          setReduceMotion(true)
-          setMaxDpr(1)
-        }
-        // If on 4g but downlink is small, also reduce
-        if (et === '4g' && connection.downlink && connection.downlink < 0.5) {
-          setReduceMotion(true)
-          setMaxDpr(1)
-        }
-      }
-      // Prefer reduced motion user setting
-      const prefers = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefers) setReduceMotion(true)
-    } catch {
-      // ignore
-    }
-  }, [])
-
-  // Show PrismaticBurst only on wider viewports (>= 760px)
-  useEffect(() => {
-    const check = () => {
-      try {
-        const w = window.innerWidth || document.documentElement.clientWidth || 0;
-        setShowBackground(w >= 760);
-        // also reduce DPR on small screens to be safe
-        if (w < 1200) setMaxDpr(1);
-        else setMaxDpr(2);
-      } catch {
-        setShowBackground(false);
-      }
-    }
-    check();
-    window.addEventListener('resize', check, { passive: true });
-    return () => window.removeEventListener('resize', check);
-  }, [])
+ 
 
   const spinWheel = async () => {
     if (spinning) return
@@ -200,32 +147,7 @@ export default function LuckyWheel() {
 
   return (
     <>
-      {/* Full Screen Background - Fixed to viewport */}
-      <div style={{ 
-        position: 'fixed', 
-        top: 0, 
-        left: 0, 
-        width: '100vw', 
-        height: '100vh', 
-        zIndex: 1, 
-        background: showBackground ? 'transparent' : '#000'
-      }}>
-        {showBackground && (
-          <PrismaticBurst
-            animationType={reduceMotion ? 'rotate' : 'rotate3d'}
-            intensity={reduceMotion ? 0.25 : 0.8}
-            speed={reduceMotion ? 0.04 : 0.1}
-            distort={reduceMotion ? 0.05 : 0.3}
-            paused={reduceMotion}
-            offset={{ x: 0, y: 0 }}
-            hoverDampness={reduceMotion ? 0 : 0.4}
-            rayCount={reduceMotion ? 0 : 12}
-            mixBlendMode="overlay"
-            colors={['#FFD700ff', '#FFA500ff', '#4169E1ff', '#1E90FFff', '#FFFF00ff', '#0066CCff']}
-            maxDpr={maxDpr}
-          />
-        )}
-      </div>
+     
 
       <div id="lucky-wheel-page" className="page-content" style={{
         minHeight: '100vh',
@@ -240,7 +162,7 @@ export default function LuckyWheel() {
         <div className="container-fluid px-2 px-sm-3 relative" style={{ 
           zIndex: 2, 
           flex: 1,
-          opacity: backgroundLoaded ? 1 : 0,
+          opacity: 1,
           transition: 'opacity 1s ease-in-out'
         }}>
           <div className="text-center mb-0">
