@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { BACKDROP_BASE_URL, IMAGE_BASE_URL, getMovieDetails, getMovieVideos, getMovieProviders, getMovieRecommendations, getMovieCollection, getMovieCredits } from '../services/tmdb'
+import { BACKDROP_BASE_URL, IMAGE_BASE_URL, getMovieDetails, getMovieVideos, getMovieProviders, getMovieRecommendations, getMovieCollection, getMovieCredits, getSimilarMovies } from '../services/tmdb'
 import { useMovies } from '../contexts/MovieContext.jsx'
 import styles from './MovieModal.module.css'
 
@@ -32,6 +32,7 @@ export default function MovieModal() {
   const [providers, setProviders] = useState({ flatrate: [], rent: [], buy: [], link: '' })
   const [collection, setCollection] = useState(null)
   const [recommendations, setRecommendations] = useState([])
+  const [similar, setSimilar] = useState([])
   const [credits, setCredits] = useState(null)
   const [error, setError] = useState('')
 
@@ -65,18 +66,19 @@ export default function MovieModal() {
         const movieDetails = await getMovieDetails(openId)
         
         // Then fetch all data in parallel
-        const [v, p, rec, col, creds] = await Promise.all([
+        const [v, p, rec, col, creds, sim] = await Promise.all([
           getMovieVideos(openId),
           getMovieProviders(openId),
           getMovieRecommendations(openId),
           movieDetails.belongs_to_collection ? getMovieCollection(movieDetails.belongs_to_collection.id) : Promise.resolve(null),
-          getMovieCredits(openId)
+          getMovieCredits(openId),
+          getSimilarMovies(openId)
         ])
-        
         if (!ignore) {
           setDetails(movieDetails)
           setVideos(v)
           setRecommendations(rec?.results || [])
+          setSimilar(sim?.results || [])
           setCollection(col)
           setCredits(creds)
           
@@ -566,6 +568,124 @@ export default function MovieModal() {
                    
 
                      
+                    {similar && similar.length > 0 && (
+                      <div className="mt-4">
+                        <h5 className="mb-3 fw-bold">Similar Movies</h5>
+                        <div className="position-relative">
+                          <div className={`d-flex overflow-auto pb-3 ${styles.horizontalScrollContainer}`}>
+                            <div className="d-flex gap-3" style={{ minWidth: 'max-content' }}>
+                              {similar.map(movie => (
+                                <div key={movie.id} className="flex-shrink-0" style={{ width: '120px' }}>
+                                  <div className="position-relative rounded-3 overflow-hidden" style={{
+                                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    transition: 'transform 0.2s, box-shadow 0.2s',
+                                    height: '100%',
+                                    ':hover': {
+                                      transform: 'translateY(-4px)',
+                                      boxShadow: '0 8px 16px rgba(0,0,0,0.2)'
+                                    }
+                                  }}>
+                                    {movie.poster_path ? (
+                                      <img 
+                                        src={`${IMAGE_BASE_URL}${movie.poster_path}`} 
+                                        alt={movie.title}
+                                        style={{ 
+                                          width: '120px', 
+                                          height: '180px', 
+                                          objectFit: 'cover',
+                                          borderTopLeftRadius: '0.5rem',
+                                          borderTopRightRadius: '0.5rem',
+                                          display: 'block'
+                                        }}
+                                        loading="lazy"
+                                      />
+                                    ) : (
+                                      <div 
+                                        style={{ 
+                                          width: '120px', 
+                                          height: '180px', 
+                                          backgroundColor: '#f8f9fa',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          borderTopLeftRadius: '0.5rem',
+                                          borderTopRightRadius: '0.5rem',
+                                          border: '1px solid #dee2e6'
+                                        }}
+                                      >
+                                        <div className="text-center text-muted">
+                                          <i className="fas fa-image mb-2" style={{ fontSize: '24px' }}></i>
+                                          <div style={{ fontSize: '10px' }}>No Poster</div>
+                                        </div>
+                                      </div>
+                                    )}
+                                    <div className="position-absolute top-0 end-0 m-2 bg-dark bg-opacity-75 text-white rounded-circle d-flex align-items-center justify-content-center" 
+                                      style={{ 
+                                        width: '28px', 
+                                        height: '28px',
+                                        fontSize: '10px',
+                                        fontWeight: 'bold'
+                                      }}>
+                                      {Math.round(movie.vote_average * 10)}%
+                                    </div>
+                                    <div className="p-2 bg-white" style={{ 
+                                      borderBottomLeftRadius: '0.5rem',
+                                      borderBottomRightRadius: '0.5rem',
+                                      minHeight: '60px',
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      justifyContent: 'space-between'
+                                    }}>
+                                      <div className="small fw-medium text-truncate text-black" title={movie.title}>
+                                        {movie.title}
+                                      </div>
+                                      <div className="d-flex justify-content-between align-items-center mt-1">
+                                        <small className="text-black">
+                                          {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
+                                        </small>
+                                        <button 
+                                          className="btn btn-sm p-0 text-primary"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setOpenId(movie.id);
+                                            document.getElementById('movieModal').scrollTo({ top: 0, behavior: 'smooth' });
+                                          }}
+                                          title="View details"
+                                        >
+                                          <i className="fas fa-chevron-right"></i>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          {/* //this button scrolls the carousel to the left */}
+                          <button 
+                            className="position-absolute start-0 top-50 translate-middle-y btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center"
+                            style={{ width: '32px', height: '32px', zIndex: 1, left: '-16px' }}
+                            onClick={(e) => {
+                              const scrollContainer = e.currentTarget.parentNode.querySelector('.d-flex.overflow-auto');
+                              if (scrollContainer) scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
+                            }}
+                          >
+                            <i className="fas fa-chevron-left"></i>
+                          </button>
+                          {/* //this button scrolls the carousel to the right */}
+                          <button 
+                            className="position-absolute end-0 top-50 translate-middle-y btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center"
+                            style={{ width: '32px', height: '32px', zIndex: 1, right: '-16px' }}
+                            onClick={(e) => {
+                              const scrollContainer = e.currentTarget.parentNode.querySelector('.d-flex.overflow-auto');
+                              if (scrollContainer) scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
+                            }}
+                          >
+                            <i className="fas fa-chevron-right"></i>
+                          </button>
+                        </div>
+                      </div>
+                    )}
                     {recommendations && recommendations.length > 0 && (
                       <div className="mt-4">
                         <h5 className="mb-3 fw-bold">You May Also Enjoy</h5>
@@ -663,7 +783,8 @@ export default function MovieModal() {
                             className="position-absolute start-0 top-50 translate-middle-y btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center"
                             style={{ width: '32px', height: '32px', zIndex: 1, left: '-16px' }}
                             onClick={(e) => {
-                              e.currentTarget.nextElementSibling.scrollBy({ left: -200, behavior: 'smooth' });
+                              const scrollContainer = e.currentTarget.parentNode.querySelector('.d-flex.overflow-auto');
+                              if (scrollContainer) scrollContainer.scrollBy({ left: -200, behavior: 'smooth' });
                             }}
                           >
                             <i className="fas fa-chevron-left"></i>
@@ -672,7 +793,8 @@ export default function MovieModal() {
                             className="position-absolute end-0 top-50 translate-middle-y btn btn-sm btn-dark rounded-circle d-flex align-items-center justify-content-center"
                             style={{ width: '32px', height: '32px', zIndex: 1, right: '-16px' }}
                             onClick={(e) => {
-                              e.currentTarget.previousElementSibling.scrollBy({ left: 200, behavior: 'smooth' });
+                              const scrollContainer = e.currentTarget.parentNode.querySelector('.d-flex.overflow-auto');
+                              if (scrollContainer) scrollContainer.scrollBy({ left: 200, behavior: 'smooth' });
                             }}
                           >
                             <i className="fas fa-chevron-right"></i>
@@ -680,6 +802,7 @@ export default function MovieModal() {
                         </div>
                       </div>
                     )}
+                    
                   </div>
                 </div>
               )}
