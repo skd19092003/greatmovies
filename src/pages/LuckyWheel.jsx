@@ -768,6 +768,39 @@ export default function LuckyWheel() {
           }
         }
         
+        @media (min-width: 768px) and (max-width: 999px) {
+          .lucky-wheel-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+          }
+
+          .preferences-left,
+          .preferences-right {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            width: 100%;
+            justify-content: center;
+          }
+
+          .corner-question {
+            position: static;
+            width: 240px;
+            max-width: 45%;
+          }
+
+          .center-controls {
+            position: static;
+            transform: none;
+            width: 100%;
+            max-width: 400px;
+          }
+        }
+        
         @media (max-width: 576px) {
           .lucky-wheel-layout {
             padding: 0.25rem;
