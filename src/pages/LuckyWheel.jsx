@@ -353,7 +353,7 @@ export default function LuckyWheel() {
           {/* Result Display */}
           {showResult && (
             <div className="row justify-content-center">
-              <div className="col-md-4 col-lg-4">
+              <div className="col-12 col-md-8 col-lg-6">
                 <div className="card shadow-lg" style={{
                   background: 'transparent',
                   border: 'none'
@@ -369,7 +369,7 @@ export default function LuckyWheel() {
                             src={`https://image.tmdb.org/t/p/w300${randomMovie.poster_path}`}
                             alt={randomMovie.title}
                             className="img-fluid rounded shadow mb-2"
-                            style={{ maxHeight: '250px', objectFit: 'cover' }}
+                            style={{ maxHeight: '320px', objectFit: 'cover' }}
                           />
                           <h3 className="h5 mb-2" style={{ color: '#fff' }}>{randomMovie.title}</h3>
                           <p className="text-white mb-2">
@@ -602,10 +602,7 @@ export default function LuckyWheel() {
           50% { background-position: 100% 50%; }
         }
         
-        .loading-spinner {
-          width: 3rem;
-          height: 3rem;
-        }
+        /* removed .loading-spinner (unused) */
         
         .movie-result img {
           transition: transform 0.3s ease;
@@ -763,9 +760,7 @@ export default function LuckyWheel() {
             padding: 0.5rem;
           }
           
-          #lucky-wheel-page {
-            paddingTop: 0.5rem;
-          }
+          /* removed invalid CSS-in-JS style key that had no effect here */
         }
         
         @media (min-width: 768px) and (max-width: 999px) {
