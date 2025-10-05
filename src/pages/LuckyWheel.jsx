@@ -181,17 +181,18 @@ export default function LuckyWheel() {
           transition: 'opacity 1s ease-in-out'
         }}>
           <div className="text-center mb-0">
-            <h1 className="display-4 fw-bold text-gradient mb-2" style={{
+            <h1 className="display-4 fw-bold text-gradient mb-2 lucky-wheel-title" style={{
               background: 'linear-gradient(45deg, #FFD700, #FFA500, #FF6347, #FF1493)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               textFillColor: 'transparent',
-              animation: 'shimmer 3s ease-in-out infinite'
+              animation: 'shimmer 3s ease-in-out infinite',
+              color: 'inherit'
             }}>
               🎰 Lucky Movie Wheel
             </h1>
-            <p className="lead text-white mb-0">
+            <p className="lead mb-0 lucky-wheel-label">
               Answer a few questions and let fate choose your next movie!
             </p>
             
@@ -205,7 +206,7 @@ export default function LuckyWheel() {
                 {/* Top Left Corner - Genre */}
                 <div className="corner-question top-left">
                   <div className="question-card">
-                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }} htmlFor="genre-select">
+                    <label className="form-label fw-semibold mb-2 lucky-wheel-label" htmlFor="genre-select">
                       <i className="fas fa-film me-2"></i>Preferred Genre:
                     </label>
                     <select
@@ -225,7 +226,7 @@ export default function LuckyWheel() {
                 {/* Bottom Left Corner - Time Period */}
                 <div className="corner-question bottom-left">
                   <div className="question-card">
-                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }} htmlFor="year-select">
+                    <label className="form-label fw-semibold mb-2 lucky-wheel-label" htmlFor="year-select">
                       <i className="fas fa-calendar me-2"></i>Time Period:
                     </label>
                     <select
@@ -251,7 +252,7 @@ export default function LuckyWheel() {
                 <div className="center-content">
                   {/* Rating Slider */}
                   <div className="mb-4">
-                    <label className="form-label fw-semibold mb-2 text-center d-block" style={{ color: '#fff' }} htmlFor="rating-slider">
+                    <label className="form-label fw-semibold mb-2 text-center d-block lucky-wheel-label" htmlFor="rating-slider">
                       <i className="fas fa-star me-2"></i>Minimum Rating: {minRating.toFixed(1)}
                     </label>
                     <input
@@ -264,7 +265,7 @@ export default function LuckyWheel() {
                       value={minRating}
                       onChange={(e) => setMinRating(parseFloat(e.target.value))}
                     />
-                    <div className="d-flex justify-content-between small text-white">
+                    <div className="d-flex justify-content-between small lucky-wheel-label">
                       <span>0</span>
                       <span>5</span>
                       <span>10</span>
@@ -305,7 +306,7 @@ export default function LuckyWheel() {
                 {/* Top Right Corner - Language */}
                 <div className="corner-question top-right">
                   <div className="question-card">
-                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }} htmlFor="language-select">
+                    <label className="form-label fw-semibold mb-2 lucky-wheel-label" htmlFor="language-select">
                       <i className="fas fa-language me-2"></i>Language:
                     </label>
                     <select
@@ -331,7 +332,7 @@ export default function LuckyWheel() {
                 {/* Bottom Right Corner - Quality */}
                 <div className="corner-question bottom-right">
                   <div className="question-card">
-                    <label className="form-label fw-semibold mb-2" style={{ color: '#fff' }} htmlFor="quality-select">
+                    <label className="form-label fw-semibold mb-2 lucky-wheel-label" htmlFor="quality-select">
                       <i className="fas fa-award me-2"></i>Quality Preference:
                     </label>
                     <select
@@ -361,7 +362,7 @@ export default function LuckyWheel() {
                   <div className="card-body p-3 text-center">
                     {randomMovie ? (
                       <>
-                        <h2 className="card-title mb-2" style={{ color: '#fff', fontSize: '1.5rem' }}>
+                        <h2 className="card-title mb-2 lucky-wheel-label" style={{ fontSize: '1.5rem' }}>
                           🎉 Your Lucky Movie!
                         </h2>
                         <div className="movie-result mb-2">
@@ -371,14 +372,14 @@ export default function LuckyWheel() {
                             className="img-fluid rounded shadow mb-2"
                             style={{ maxHeight: '320px', objectFit: 'cover' }}
                           />
-                          <h3 className="h5 mb-2" style={{ color: '#fff' }}>{randomMovie.title}</h3>
-                          <p className="text-white mb-2">
+                          <h3 className="h5 mb-2 lucky-wheel-label">{randomMovie.title}</h3>
+                          <p className="lucky-wheel-label mb-2">
                             {randomMovie.release_date && (
                               <span>{new Date(randomMovie.release_date).getFullYear()}</span>
                             )}
                             {randomMovie.vote_average && (
                               <span className="ms-3">
-                                <i className="fas fa-star text-white me-2"></i>
+                                <i className="fas fa-star lucky-wheel-label me-2"></i>
                                 {randomMovie.vote_average.toFixed(1)}
                               </span>
                             )}
@@ -406,10 +407,10 @@ export default function LuckyWheel() {
                       </>
                     ) : (
                       <>
-                        <h2 className="card-title mb-2" style={{ color: '#fff', fontSize: '1.5rem' }}>
+                        <h2 className="card-title mb-2 lucky-wheel-label" style={{ fontSize: '1.5rem' }}>
                           😅 No Movies Found
                         </h2>
-                        <p className="mb-2" style={{ color: '#fff' }}>
+                        <p className="mb-2 lucky-wheel-label">
                           We couldn't find any movies that match your criteria.
                           Try adjusting your preferences and spin again!
                         </p>
@@ -756,11 +757,10 @@ export default function LuckyWheel() {
             padding-right: 0.5rem;
           }
           
-          .question-card {
-            padding: 0.5rem;
+          .input-box,
+          .slider-track {
+            border-color: #ccc;
           }
-          
-          /* removed invalid CSS-in-JS style key that had no effect here */
         }
         
         @media (min-width: 769px) and (max-width: 999px) {
@@ -845,36 +845,39 @@ export default function LuckyWheel() {
           border: none !important;
         }
         
-        [data-theme="light"] h1, [data-theme="light"] h5, [data-theme="light"] h3, [data-theme="light"] label {
-          color: #fff !important;
-        }
-        
-        [data-theme="light"] .text-muted {
-          color: #6c757d !important;
+        /* Light theme readability improvements */
+        [data-theme='light'] .lucky-wheel-title,
+        [data-theme='light'] .lucky-wheel-label {
+          color: #222 !important;
+          text-shadow: 0 1px 2px #fff8;
         }
 
-        /* Background overlay for better readability */
-        #lucky-wheel-page::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0, 0, 0, 0.1);
-          z-index: 5;
-          pointer-events: none;
+        [data-theme='light'] .form-label,
+        [data-theme='light'] .form-select,
+        [data-theme='light'] .form-range,
+        [data-theme='light'] .center-content,
+        [data-theme='light'] .question-card {
+          color: #222 !important;
+          border-color: #bbb !important;
+          background: rgba(255,255,255,0.97) !important;
         }
-        
-        [data-theme="light"] #lucky-wheel-page::before {
-          background: rgba(0, 0, 0, 0.05);
+
+        [data-theme='light'] .wheel-button {
+          color: #222 !important;
         }
-        
-        /* Ensure content is above background */
-        .container-fluid {
-          position: relative;
-          z-index: 10;
+
+        [data-theme='light'] .reset-button {
+          color: #222 !important;
+          border-color: #bbb !important;
         }
+
+        [data-theme='light'] .movie-result h3,
+        [data-theme='light'] .movie-result p,
+        [data-theme='light'] .card-title {
+          color: #222 !important;
+        }
+
+  
       `}</style>
         </div>
       </div>
