@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { discoverMovies, getGenres, searchMovies, getNowPlaying } from '../services/tmdb'
+import { discoverMovies, getGenres, searchMovies } from '../services/tmdb'
 import MovieCard from '../components/MovieCard'
  
 export default function Home() {
@@ -42,7 +42,7 @@ export default function Home() {
   const [year, setYear] = useState('')
   const [language, setLanguage] = useState('')
   const [selectedProvider, setSelectedProvider] = useState('')
-  const [sort, setSort] = useState('') // Empty by default to show Now Playing
+  const [sort, setSort] = useState('most_popular')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [movies, setMovies] = useState([])
@@ -70,7 +70,8 @@ export default function Home() {
       if (typeof saved.query === 'string') setQuery(saved.query)
       if (typeof saved.genre === 'string') setGenre(saved.genre)
       if (typeof saved.year === 'string') setYear(saved.year)
-      if (typeof saved.sort === 'string') setSort(saved.sort)
+  if (typeof saved.sort === 'string' && saved.sort) setSort(saved.sort)
+  else setSort('most_popular')
       if (typeof saved.page === 'number') setPage(saved.page)
     } catch { /* noop */ }
   }, [])
@@ -132,9 +133,6 @@ export default function Home() {
             page,
             include_adult: false
           }, opts)
-        } else if (sort === '') {
-          // Default view - Show Now Playing when no sort is selected
-          data = await getNowPlaying(page, opts);
         } else {
           // Handle other sort cases with discover
           const params = {
@@ -275,7 +273,7 @@ export default function Home() {
     setYear('');
     setLanguage('');
     setSelectedProvider('');
-    setSort(''); // Reset to empty to show Now Playing
+    setSort('most_popular'); // Keep Most Popular as default
     setPage(1);
   };
 
@@ -363,9 +361,8 @@ export default function Home() {
               onChange={(e) => setSort(e.target.value)}
               aria-label="Sort Movies"
             >
-              <option value="">Sort By</option>
-              <option value="highest_grossing">Highest Grossing</option>
               <option value="most_popular">Most Popular</option>
+              <option value="highest_grossing">Highest Grossing</option>
               <option value="oldest">Oldest</option>
               <option value="newest">Newest</option>
               <option value="most_voted">Most Voted</option>
