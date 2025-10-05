@@ -362,7 +362,7 @@ export default function LuckyWheel() {
                   <div className="card-body p-3 text-center">
                     {randomMovie ? (
                       <>
-                        <h2 className="card-title mb-2 lucky-wheel-label" style={{ fontSize: '1.5rem' }}>
+                        <h2 className="card-title mb-2 lucky-wheel-label text-white" style={{ fontSize: '1.5rem' }}>
                           🎉 Your Lucky Movie!
                         </h2>
                         <div className="movie-result mb-2">
@@ -372,13 +372,13 @@ export default function LuckyWheel() {
                             className="img-fluid rounded shadow mb-2"
                             style={{ maxHeight: '320px', objectFit: 'cover' }}
                           />
-                          <h3 className="h5 mb-2 lucky-wheel-label">{randomMovie.title}</h3>
-                          <p className="lucky-wheel-label mb-2">
+                          <h3 className="h5 mb-2 lucky-wheel-label text-white">{randomMovie.title}</h3>
+                          <p className="lucky-wheel-label mb-2 text-white">
                             {randomMovie.release_date && (
                               <span>{new Date(randomMovie.release_date).getFullYear()}</span>
                             )}
                             {randomMovie.vote_average && (
-                              <span className="ms-3">
+                              <span className="ms-3 ">
                                 <i className="fas fa-star lucky-wheel-label me-2"></i>
                                 {randomMovie.vote_average.toFixed(1)}
                               </span>
