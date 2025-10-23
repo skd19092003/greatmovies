@@ -412,10 +412,10 @@ export default function LuckyWheel() {
                       </>
                     ) : (
                       <>
-                        <h2 className="card-title mb-2 lucky-wheel-label" style={{ fontSize: '1.5rem' }}>
+                        <h2 className="card-title mb-2 lucky-wheel-label text-white" style={{ fontSize: '1.5rem' }}>
                           😅 No Movies Found
                         </h2>
-                        <p className="mb-2 lucky-wheel-label">
+                        <p className="mb-2 lucky-wheel-label text-white">
                           We couldn't find any movies that match your criteria.
                           Try adjusting your preferences and spin again!
                         </p>
