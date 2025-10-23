@@ -216,6 +216,11 @@ export default function LuckyWheel() {
                       onChange={(e) => setSelectedGenre(e.target.value)}
                     >
                       <option value="">Any Genre</option>
+                      {/* Combined genre shortcuts */}
+                      <option value="27,35">Horror + Comedy</option>
+                      <option value="12,878">Adventure + Sci‑Fi</option>
+                      <option value="878,99">Sci‑Fi + Documentary</option>
+                      <option value="28,12">Action + Adventure</option>
                       {genres.map(genre => (
                         <option key={genre.id} value={genre.id}>{genre.name}</option>
                       ))}

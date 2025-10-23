@@ -249,22 +249,18 @@ export default function Home() {
 
   const handleGenreChange = (e) => {
     setGenre(e.target.value);
-    setSort('most_popular');
   };
 
   const handleYearChange = (e) => {
     setYear(e.target.value);
-    setSort('most_popular');
   };
 
   const handleLanguageChange = (e) => {
     setLanguage(e.target.value);
-    setSort('most_popular');
   };
 
   const handleProviderChange = (e) => {
     setSelectedProvider(e.target.value);
-    setSort('most_popular');
   };
 
   const resetFilters = () => {
@@ -315,6 +311,11 @@ export default function Home() {
           <div className="col-6 col-md-2">
             <select className="form-select" value={genre} onChange={handleGenreChange} aria-label="Select Genre">
               <option value="">All Genres</option>
+              {/* Combined genre shortcuts */}
+              <option value="27,35">Horror + Comedy</option>
+              <option value="12,878">Adventure + Sci-Fi</option>
+              <option value="878,99">Sci‑Fi + Documentary</option>
+              <option value="28,12">Action + Adventure</option>
               {genres.map((g) => (
                 <option key={g.id} value={g.id}>{g.name}</option>
               ))}
