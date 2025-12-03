@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { BACKDROP_BASE_URL, IMAGE_BASE_URL, getMovieDetails, getMovieVideos, getMovieProviders, getMovieRecommendations, getMovieCollection, getMovieCredits, getSimilarMovies } from '../services/tmdb'
 import { useMovies } from '../contexts/MovieContext.jsx'
 import styles from './MovieModal.module.css'
+import { Link } from 'react-router-dom';
 
 // Helper function to format currency in a shortened format (e.g., $1.5B, $1.5M, $150K)
 const formatCurrency = (amount) => {
@@ -344,7 +345,8 @@ export default function MovieModal() {
                     {details.overview && (
                               <div className="mt-3 p-3 border rounded" style={{
                                       borderColor: '#dee2e6 !important',
-                                       textAlign: 'justify' }}>
+                                       textAlign: 'justify' }
+}>
                      <p className="mb-0">{details.overview}</p>
                   </div>
                  )}
@@ -388,7 +390,9 @@ export default function MovieModal() {
                     {/* Only show Where to Watch if there are any providers */}
                     {(providers.flatrate.length > 0 || providers.rent.length > 0 || providers.buy.length > 0) && (
                       <div className="mt-3">
-                        <h6 className="mb-3 text-uppercase small fw-bold text-center">Where to Watch</h6>
+                        <h6 className="mb-3 text-uppercase small fw-bold text-center">Where to Watch
+                        </h6>
+                        
                         <div className="d-flex flex-wrap justify-content-center gap-3">
                           {providers.flatrate.length > 0 && (
                             <div className="p-3 border rounded" style={{ minWidth: '200px' }}>
@@ -430,6 +434,18 @@ export default function MovieModal() {
                       </div>
                     )}
 
+                    <h6 className="m-3 text-uppercase small fw-bold text-center border  border-2 p-2  hover:bg-green-500 hover:text-white hover:scale-125 transition-all duration-200 ">
+                       <p>No Money-💰🥺?</p>
+                      <a
+                                href={`https://www.watchluna.com/search?query=${encodeURIComponent(details.title)}`} 
+                                target="_blank" 
+                                rel="noreferrer" 
+                                className="text-decoration-none"
+                              >
+                               
+                                <i className="fas fa-external-link-alt me-1"></i>Watch-FREE😉👍🙈
+                              </a>
+                        </h6>
 
                     
 
@@ -446,7 +462,9 @@ export default function MovieModal() {
                     )  : (
                       <div className="alert alert-info mt-3 mb-0">Trailer not available.</div>
                      )}
-
+                    
+                     
+                       
 
                     
                     {collection && collection.parts && collection.parts.length > 0 && (
