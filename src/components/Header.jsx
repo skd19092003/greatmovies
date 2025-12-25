@@ -8,7 +8,7 @@ export default function Header({ theme = 'dark', onToggleTheme = () => {} }) {
       <div className="container-fluid px-2 px-sm-3">
         <NavLink className="navbar-brand d-flex align-items-center" to="/">
           <i className="fas fa-film me-2"></i>
-          <span className="fw-bold">CineVault</span>
+          <span className="fw-bold">FindMovies</span>
         </NavLink>
         <button
           className="navbar-toggler"

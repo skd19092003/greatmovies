@@ -5,7 +5,7 @@ export default function Footer() {
             zIndex: 1000
         }}>
             <div className="container text-center">
-                <p>&copy; {new Date().getFullYear()} CineVault. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} FindMovies. All rights reserved.</p>
                 <p>&copy; Made with ❤️ by <a href="https://www.linkedin.com/in/skd03/" target="_blank">SKD</a>.</p>
             </div>
         </footer>
