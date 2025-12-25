@@ -1,10 +1,7 @@
-# CineVault - Your Ultimate Movie Discovery Platform
-
-CineVault is a premium React-based movie discovery and management platform that combines intelligent movie recommendations with personal organization tools. Built with modern web technologies, it offers a seamless experience for discovering, tracking, and organizing your movie journey.
+# FindMovies - Your Ultimate Movie Discovery Platform
 
 ## Overview
-
-CineVault is a comprehensive movie platform that integrates with The Movie Database (TMDB) to provide rich movie data, personalized lists, and intelligent discovery tools. Everything is stored locally in your browser for privacy and instant access.
+FindMovies is a premium React-based movie discovery and management platform that combines intelligent movie recommendations with personal organization tools. Built with modern web technologies, it offers a seamless experience for discovering, tracking, and organizing your movie journey.
 
 ## 🌟 Core Features
 
@@ -30,7 +27,7 @@ CineVault is a comprehensive movie platform that integrates with The Movie Datab
 
 ## 🎰 Lucky Wheel - Premium Feature
 
-**The crown jewel of CineVault** - An intelligent movie randomizer that takes the guesswork out of choosing what to watch next! 
+An intelligent movie randomizer that takes the guesswork out of choosing what to watch next! 
 
 ### How Lucky Wheel Works:
 - **Smart Filtering**: Choose your preferred genre, language, time period (Old/Medium/New), and quality preference
@@ -40,7 +37,6 @@ CineVault is a comprehensive movie platform that integrates with The Movie Datab
 - **Instant Results**: Beautiful result display with movie details and quick access to full information
 
 The Lucky Wheel feature solves the common problem of "analysis paralysis" when choosing movies, making decision-making fun and effortless!
-
 
 ### 🎨 **User Experience**
 - **Dark/Light Theme**: Complete theme switching with persistent preferences
@@ -60,62 +56,6 @@ The Lucky Wheel feature solves the common problem of "analysis paralysis" when c
 - **Error Handling**: Graceful error recovery with retry mechanisms  
 - **Network Resilience**: Automatic fallback systems for connection issues
 - **Memory Management**: Optimized state management and cleanup
-
-## 🛡️ Cloudflare Proxy Solution - Solving ISP Restrictions
-
-### The Problem
-Some Internet Service Providers (particularly Jio) block access to TMDB's Website & API domains (api.themoviedb.org and image.tmdb.org). This prevents users on these networks from accessing movie data, making the app unusable.
-
-### The Solution
-CineVault implements a **Cloudflare Worker proxy** that acts as an intermediary between the app and TMDB's API:
-
-#### How it Works:
-1. **Client Request**: App makes requests to the Cloudflare Worker instead of TMDB directly
-2. **Proxy Forward**: Worker receives the request and forwards it to TMDB with your API key
-3. **Response Return**: Worker gets TMDB's response and sends it back to your app
-4. **Seamless Experience**: Users on restricted networks can now access all movie data
-
-#### Benefits:
-- ✅ **ISP Bypass**: Circumvents ISP blocks on TMDB domains
-- ✅ **Better Performance**: Cloudflare's global CDN provides faster response times
-- ✅ **CORS Handling**: Eliminates cross-origin issues
-- ✅ **Automatic Fallback**: App falls back to direct TMDB if proxy fails
-
-## 🛠️ Technology Stack
-
-- **Frontend**: React 19+ with modern hooks and Context API
-- **Routing**: React Router DOM for SPA navigation
-- **Build Tool**: Vite for fast development and optimized builds
-- **HTTP Client**: Axios for API communication
-- **Styling**: CSS3 with responsive design and dark/light themes
-- **3D Graphics**: OGL library for prismatic effects in Lucky Wheel
-- **Icons**: Hero Icons and Font Awesome
-- **Deployment**: Vercel with optimized build configuration
-
-
-## ⚙️ Cloudflare Worker Setup (Recommended)
-
-To set up the ISP bypass proxy:
-
-### 1. Create Cloudflare Worker
-- Go to Cloudflare Dashboard → Workers & Pages
-- Click "Create Worker"
-- Replace default code with proxy logic
-
-### 2. Add Environment Variables
-- In Worker settings → Variables → Environment Variables
-- Add `TMDB_API_KEY` with your TMDB API key
-
-### 3. Deploy Worker
-- Save and deploy your worker
-- Note the worker URL (e.g., `https://your-worker.workers.dev`)
-
-### 4. Configure App
-Update your `.env` file:
-```env
-VITE_TMDB_PROXY_URL=https://your-worker.workers.dev/3
-VITE_TMDB_IMAGE_PROXY=https://your-worker.workers.dev/image
-```
 
 ## 📱 Application Routes
 
@@ -137,30 +77,6 @@ VITE_TMDB_IMAGE_PROXY=https://your-worker.workers.dev/image
 - **MovieModal**: Detailed movie information with trailers and recommendations
 - **Header**: Navigation with theme toggle and list counters
 - **Toaster**: Toast notification system
-- **PrismaticBurst**: 3D visual effects for Lucky Wheel
-
-## 🌍 Browser Support
-
-- ✅ Chrome 90+
-- ✅ Firefox 88+
-- ✅ Safari 14+
-- ✅ Edge 90+
-- 📱 Mobile browsers supported
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 🙏 Acknowledgments
-
-- [The Movie Database (TMDB)](https://www.themoviedb.org/) for providing comprehensive movie data
-- [Cloudflare Workers](https://workers.cloudflare.com/) for enabling ISP bypass solutions
-- [Vercel](https://vercel.com/) for seamless deployment and hosting
-
 ---
 
 **🎬 Experience CineVault Live: [https://greatmovies.vercel.app/](https://greatmovies.vercel.app/)**
