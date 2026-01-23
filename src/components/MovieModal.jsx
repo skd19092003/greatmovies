@@ -588,7 +588,7 @@ export default function MovieModal() {
                      
                     {similar && similar.length > 0 && (
                       <div className="mt-4">
-                        <h5 className="mb-3 fw-bold">Similar Movies</h5>
+                        <h5 className="mb-3 fw-bold">You may also Enjoy</h5>
                         <div className="position-relative">
                           <div className={`d-flex overflow-auto pb-3 ${styles.horizontalScrollContainer}`}>
                             <div className="d-flex gap-3" style={{ minWidth: 'max-content' }}>
@@ -706,7 +706,7 @@ export default function MovieModal() {
                     )}
                     {recommendations && recommendations.length > 0 && (
                       <div className="mt-4">
-                        <h5 className="mb-3 fw-bold">You May Also Enjoy</h5>
+                        <h5 className="mb-3 fw-bold">Similar Movies</h5>
                         <div className="position-relative">
                           <div className={`d-flex overflow-auto pb-3 ${styles.horizontalScrollContainer}`}>
                             <div className="d-flex gap-3" style={{ minWidth: 'max-content' }}>
