@@ -14,6 +14,22 @@ const SEO = ({
   const baseUrl = 'https://findmovies.app'
   
   useEffect(() => {
+    // Add preconnect hints for performance
+    const preconnectOrigins = [
+      'https://image.tmdb.org',
+      'https://cinevault-tmdb-proxy.skd19092003.workers.dev'
+    ]
+
+    preconnectOrigins.forEach(origin => {
+      let link = document.querySelector(`link[rel="preconnect"][href="${origin}"]`)
+      if (!link) {
+        link = document.createElement('link')
+        link.rel = 'preconnect'
+        link.href = origin
+        document.head.appendChild(link)
+      }
+    })
+
     // Update page title
     if (title) {
       document.title = `${title} | FindMovies - Discover Movies`
