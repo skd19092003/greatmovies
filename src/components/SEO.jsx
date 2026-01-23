@@ -92,9 +92,29 @@ const SEO = ({
     }
 
     if (structuredData) {
+      // Fix rating scale for movies if needed
+      const processedData = { ...structuredData }
+      
+      // Check if this is movie data and has aggregateRating
+      if (processedData.mainEntity?.itemListElement) {
+        processedData.mainEntity.itemListElement = processedData.mainEntity.itemListElement.map(item => {
+          if (item.aggregateRating && !item.aggregateRating.bestRating) {
+            return {
+              ...item,
+              aggregateRating: {
+                ...item.aggregateRating,
+                bestRating: 10,
+                worstRating: 1
+              }
+            }
+          }
+          return item
+        })
+      }
+      
       const script = document.createElement('script')
       script.type = 'application/ld+json'
-      script.textContent = JSON.stringify(structuredData)
+      script.textContent = JSON.stringify(processedData)
       document.head.appendChild(script)
     }
 
