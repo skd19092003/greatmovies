@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { discoverMovies, getGenres, searchMovies } from '../services/tmdb'
 import MovieCard from '../components/MovieCard'
+import SEO from '../components/SEO'
  
 export default function Home() {
   const [genres, setGenres] = useState([])
@@ -275,7 +276,44 @@ export default function Home() {
 
   const onRetry = () => setReloadTick((t) => t + 1)
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "FindMovies - Discover Movies",
+    "description": "Discover and explore amazing movies with FindMovies. Search through thousands of films, filter by genre, year, language, and streaming services. Find your next favorite movie.",
+    "url": "https://findmovies.app",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://findmovies.app/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": movies.length,
+      "itemListElement": movies.slice(0, 10).map((movie, index) => ({
+        "@type": "Movie",
+        "position": index + 1,
+        "name": movie.title,
+        "url": `https://www.themoviedb.org/movie/${movie.id}`,
+        "image": movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null,
+        "dateCreated": movie.release_date,
+        "aggregateRating": movie.vote_average ? {
+          "@type": "AggregateRating",
+          "ratingValue": movie.vote_average,
+          "ratingCount": movie.vote_count
+        } : undefined
+      }))
+    }
+  }
+
   return (
+    <>
+      <SEO
+        title="Find Movies - Discover Amazing Films"
+        description="Search and discover thousands of movies with FindMovies. Filter by genre, year, language, and streaming services. Find your next favorite film today."
+        keywords="find movies, movie search, discover films, streaming movies, movie database, watch movies, cinema, films"
+        structuredData={structuredData}
+      />
     <div id="discover-page" className="page-content">
       <div className="container-fluid px-2 px-sm-3">
         <div className="text-center mb-4">
@@ -452,41 +490,7 @@ export default function Home() {
           <p className="mt-3 text-muted">Loading movies...</p>
         </div>
       </div>
-
-  <style>{`
-        .lucky-wheel-btn {
-          background: linear-gradient(45deg, #FFD700, #FFA500, #FF6347, #FF1493) !important;
-          background-size: 200% 200% !important;
-          border: none !important;
-          color: #000 !important;
-          font-weight: bold !important;
-          text-transform: uppercase !important;
-          letter-spacing: 1px !important;
-          box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4) !important;
-          transition: all 0.3s ease !important;
-          animation: shimmer 3s ease-in-out infinite !important;
-          font-size: 1.2rem !important;
-          padding: 1rem 2rem !important;
-        }
-        
-        .lucky-wheel-btn:hover {
-          opacity: 0.7 !important;
-          transform: translateY(-2px) !important;
-          box-shadow: 0 12px 35px rgba(255, 215, 0, 0.6) !important;
-        }
-        
-        @media (max-width: 768px) {
-          .lucky-wheel-btn {
-            font-size: 0.9rem !important;
-            padding: 0.6rem 1rem !important;
-          }
-        }
-        
-        @keyframes shimmer {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-  `}</style>
     </div>
+    </>
   )
 }

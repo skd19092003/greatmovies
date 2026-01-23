@@ -1,6 +1,7 @@
 import { useMovies } from '../contexts/MovieContext.jsx'
 import MovieCard from '../components/MovieCard'
 import { useState, useEffect } from 'react'
+import SEO from '../components/SEO'
 
 export default function Watchlist() {
   const { watchlist = [] } = useMovies() || {}
@@ -30,7 +31,22 @@ export default function Watchlist() {
   const canPrev = page > 1
   const canNext = page < totalPages
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "FindMovies - My Watchlist",
+    "description": "Personal movie watchlist with films you want to watch later.",
+    "url": "https://findmovies.app/watchlist"
+  }
+
   return (
+    <>
+      <SEO
+        title="My Watchlist"
+        description="Manage your personal movie watchlist. Save films to watch later and never miss a great movie."
+        keywords="watchlist, movies to watch, save movies, personal movie list, film queue"
+        structuredData={structuredData}
+      />
     <div id="watchlist-page" className="page-content">
       <div className="text-center mb-4">
         <h1 className="display-4 fw-bold text-gradient mb-3">Watch Later</h1>
@@ -81,5 +97,6 @@ export default function Watchlist() {
         </div>
       )}
     </div>
+    </>
   )
 }

@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
+Crawl-delay: 1
+
+# Block common non-content paths
+Disallow: /api/
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /*.jsx$
 
 Sitemap: https://findmovies.app/sitemap.xml

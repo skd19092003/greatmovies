@@ -1,6 +1,7 @@
 import { useMovies } from '../contexts/MovieContext.jsx'
 import MovieCard from '../components/MovieCard'
 import { useState, useEffect } from 'react'
+import SEO from '../components/SEO'
 
 export default function Watched() {
   const { watched = [] } = useMovies() || {}
@@ -30,7 +31,22 @@ export default function Watched() {
   const canPrev = page > 1
   const canNext = page < totalPages
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "FindMovies - Watched Movies",
+    "description": "Personal collection of movies you have already watched.",
+    "url": "https://findmovies.app/watched"
+  }
+
   return (
+    <>
+      <SEO
+        title="Watched Movies"
+        description="Browse your personal collection of watched movies. Keep track of films you've already seen and your viewing history."
+        keywords="watched movies, viewing history, movies seen, film history, watched list"
+        structuredData={structuredData}
+      />
     <div id="watched-page" className="page-content">
       <div className="text-center mb-4">
         <h1 className="display-4 fw-bold text-gradient mb-3">Watched</h1>
@@ -81,5 +97,6 @@ export default function Watched() {
         </div>
       )}
     </div>
+    </>
   )
 }

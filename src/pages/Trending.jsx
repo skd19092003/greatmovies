@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getTrending } from '../services/tmdb'
 import MovieCard from '../components/MovieCard'
+import SEO from '../components/SEO'
 
 export default function Trending() {
   const [page, setPage] = useState(1)
@@ -62,7 +63,39 @@ export default function Trending() {
   const canPrev = page > 1
   const canNext = page < totalPages
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "FindMovies - Trending Movies",
+    "description": "Currently trending movies across all platforms. Discover the most popular films right now.",
+    "url": "https://findmovies.app/trending",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": movies.length,
+      "itemListElement": movies.slice(0, 10).map((movie, index) => ({
+        "@type": "Movie",
+        "position": index + 1,
+        "name": movie.title,
+        "url": `https://www.themoviedb.org/movie/${movie.id}`,
+        "image": movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null,
+        "dateCreated": movie.release_date,
+        "aggregateRating": movie.vote_average ? {
+          "@type": "AggregateRating",
+          "ratingValue": movie.vote_average,
+          "ratingCount": movie.vote_count
+        } : undefined
+      }))
+    }
+  }
+
   return (
+    <>
+      <SEO
+        title="Trending Movies"
+        description="Discover the hottest trending movies right now. Stay updated with the most popular films across streaming platforms and theaters."
+        keywords="trending movies, popular movies, latest movies, streaming movies, what's trending, hot movies"
+        structuredData={structuredData}
+      />
     <div id="trending-page" className="page-content">
       <div className="container-fluid px-2 px-sm-3">
         <div className="text-center mb-4">
@@ -144,5 +177,6 @@ export default function Trending() {
         <p className="mt-3 text-muted">Loading movies...</p>
       </div>
     </div>
+    </>
   )
 }

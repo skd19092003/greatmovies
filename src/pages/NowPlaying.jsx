@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getNowPlaying } from '../services/tmdb'
 import MovieCard from '../components/MovieCard'
+import SEO from '../components/SEO'
 
 export default function NowPlaying() {
   const [page, setPage] = useState(1)
@@ -61,7 +62,34 @@ export default function NowPlaying() {
   const canPrev = page > 1
   const canNext = page < totalPages
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "FindMovies - Now Playing Movies",
+    "description": "Movies currently playing in theaters and available on streaming platforms.",
+    "url": "https://findmovies.app/now-playing",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": movies.length,
+      "itemListElement": movies.slice(0, 10).map((movie, index) => ({
+        "@type": "Movie",
+        "position": index + 1,
+        "name": movie.title,
+        "url": `https://www.themoviedb.org/movie/${movie.id}`,
+        "image": movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null,
+        "dateCreated": movie.release_date
+      }))
+    }
+  }
+
   return (
+    <>
+      <SEO
+        title="Now Playing Movies"
+        description="Watch movies currently playing in theaters and streaming. Find the latest releases and current cinema hits."
+        keywords="now playing, current movies, movies in theaters, new releases, streaming now, latest films"
+        structuredData={structuredData}
+      />
     <div id="now-playing-page" className="page-content">
       <div className="container-fluid px-2 px-sm-3">
         <div className="text-center mb-4">
@@ -143,5 +171,6 @@ export default function NowPlaying() {
         <p className="mt-3 text-muted">Loading movies...</p>
       </div>
     </div>
+    </>
   )
 }

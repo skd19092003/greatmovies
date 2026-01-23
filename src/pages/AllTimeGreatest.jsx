@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getTopRated } from '../services/tmdb'
 import MovieCard from '../components/MovieCard'
+import SEO from '../components/SEO'
 
 export default function AllTimeGreatest() {
   const [page, setPage] = useState(1)
@@ -71,7 +72,41 @@ export default function AllTimeGreatest() {
   const canPrev = page > 1
   const canNext = page < totalPages
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "FindMovies - All-Time Greatest Movies",
+    "description": "The highest-rated and most acclaimed movies of all time. Classic films and cinematic masterpieces.",
+    "url": "https://findmovies.app/greatest",
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": movies.length,
+      "itemListElement": movies.slice(0, 10).map((movie, index) => ({
+        "@type": "Movie",
+        "position": index + 1,
+        "name": movie.title,
+        "url": `https://www.themoviedb.org/movie/${movie.id}`,
+        "image": movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null,
+        "dateCreated": movie.release_date,
+        "aggregateRating": movie.vote_average ? {
+          "@type": "AggregateRating",
+          "ratingValue": movie.vote_average,
+          "ratingCount": movie.vote_count,
+          "bestRating": "10",
+          "worstRating": "1"
+        } : undefined
+      }))
+    }
+  }
+
   return (
+    <>
+      <SEO
+        title="All-Time Greatest Movies"
+        description="Discover the highest-rated movies of all time. From classic films to modern masterpieces, explore cinema's greatest achievements."
+        keywords="best movies, greatest movies, top rated movies, classic films, cinema masterpieces, highest rated movies"
+        structuredData={structuredData}
+      />
     <div id="greatest-page" className="page-content">
       <div className="container-fluid px-2 px-sm-3">
         <div className="text-center mb-4">
@@ -154,5 +189,6 @@ export default function AllTimeGreatest() {
         <p className="mt-3 text-muted">Loading movies...</p>
       </div>
     </div>
+    </>
   )
 }

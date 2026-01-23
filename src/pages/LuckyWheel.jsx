@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { discoverMovies, getGenres } from '../services/tmdb'
 import MovieModal from '../components/MovieModal'
+import SEO from '../components/SEO'
 
 export default function LuckyWheel() {
   const [genres, setGenres] = useState([])
@@ -162,6 +163,11 @@ export default function LuckyWheel() {
 
   return (
     <>
+      <SEO
+        title="Lucky Wheel - Random Movie Discovery"
+        description="Spin the lucky wheel and discover random movies! Get personalized film recommendations based on your preferences with our fun movie roulette."
+        keywords="lucky wheel, random movies, movie roulette, film discovery, random movie generator, movie recommendations"
+      />
      
 
       <div id="lucky-wheel-page" className="page-content" style={{

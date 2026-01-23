@@ -1,6 +1,7 @@
 import { useMovies } from '../contexts/MovieContext.jsx'
 import MovieCard from '../components/MovieCard'
 import { useState, useEffect } from 'react'
+import SEO from '../components/SEO'
 
 export default function Favorites() {
   const { favorites = [] } = useMovies() || {}
@@ -30,7 +31,22 @@ export default function Favorites() {
   const canPrev = page > 1
   const canNext = page < totalPages
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "FindMovies - My Favorite Movies",
+    "description": "Personal collection of favorite movies and films you love.",
+    "url": "https://findmovies.app/favorites"
+  }
+
   return (
+    <>
+      <SEO
+        title="My Favorite Movies"
+        description="Browse your personal collection of favorite movies. Save and organize the films you love most."
+        keywords="favorite movies, loved films, personal movie collection, best movies, saved movies"
+        structuredData={structuredData}
+      />
     <div id="favorites-page" className="page-content">
       <div className="text-center mb-4">
         <h1 className="display-4 fw-bold text-gradient mb-3">Favorites</h1>
@@ -81,5 +97,6 @@ export default function Favorites() {
         </div>
       )}
     </div>
+    </>
   )
 }
