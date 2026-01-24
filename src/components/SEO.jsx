@@ -108,24 +108,49 @@ const SEO = ({
     }
 
     if (structuredData) {
-      // Fix rating scale for movies if needed
-      const processedData = { ...structuredData }
+      // Process structured data and fix ratings
+      const processRating = (rating) => {
+        if (!rating || !rating.ratingValue) return rating;
+        
+        // Normalize rating to 1-5 scale if it's on a 1-10 scale
+        let ratingValue = parseFloat(rating.ratingValue);
+        if (ratingValue > 5 && (!rating.bestRating || rating.bestRating > 5)) {
+          ratingValue = (ratingValue / 2).toFixed(1);
+        }
+        
+        return {
+          ...rating,
+          '@type': 'AggregateRating',
+          ratingValue: ratingValue.toString(),
+          bestRating: '5',
+          worstRating: '1',
+          ratingCount: rating.ratingCount?.toString() || '0'
+        };
+      };
       
-      // Check if this is movie data and has aggregateRating
+      const processedData = JSON.parse(JSON.stringify(structuredData));
+      
+      // Process main entity if it exists
       if (processedData.mainEntity?.itemListElement) {
         processedData.mainEntity.itemListElement = processedData.mainEntity.itemListElement.map(item => {
-          if (item.aggregateRating && !item.aggregateRating.bestRating) {
-            return {
-              ...item,
-              aggregateRating: {
-                ...item.aggregateRating,
-                bestRating: 10,
-                worstRating: 1
-              }
-            }
+          if (item.aggregateRating) {
+            item.aggregateRating = processRating(item.aggregateRating);
           }
-          return item
-        })
+          return item;
+        });
+      }
+      
+      // Process top-level aggregateRating if it exists
+      if (processedData.aggregateRating) {
+        processedData.aggregateRating = processRating(processedData.aggregateRating);
+      }
+      
+      // Ensure @type is set for the main entity
+      if (processedData['@type'] === 'ItemList' && !processedData.mainEntity?.@type) {
+        processedData.mainEntity = {
+          '@type': 'ItemList',
+          ...processedData.mainEntity
+        };
       }
       
       const script = document.createElement('script')
