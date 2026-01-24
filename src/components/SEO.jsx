@@ -146,7 +146,7 @@ const SEO = ({
       }
       
       // Ensure @type is set for the main entity
-      if (processedData['@type'] === 'ItemList' && !processedData.mainEntity?.@type) {
+      if (processedData['@type'] === 'ItemList' && processedData.mainEntity && !processedData.mainEntity['@type']) {
         processedData.mainEntity = {
           '@type': 'ItemList',
           ...processedData.mainEntity
