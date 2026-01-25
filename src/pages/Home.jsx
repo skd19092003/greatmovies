@@ -318,13 +318,8 @@ export default function Home() {
       <div className="container-fluid px-2 px-sm-3">
         <div className="text-center mb-4">
           <h1 className="display-4 fw-bold text-gradient mb-3">Discover Movies</h1>
-<<<<<<< HEAD
           <Link to="/lucky-wheel" className="btn btn-lg mb-3 lucky-wheel-btn">
             <i className="fas fa-dice me-2"></i>Click for Lucky Wheel
-=======
-          <Link to="/lucky-wheel" className="btn btn-primary bg-green-600 btn-lg mb-3 lucky-wheel-btn">
-            <i className="fas fa-dice me-2 bg-green-600"></i>Click for Lucky Wheel
->>>>>>> 130698e559f9bf3f59cb577a3f8bd71a5696bf49
           </Link>
           <p className="lead text-muted">Find your next favorite Movies from any language</p>
         </div>
