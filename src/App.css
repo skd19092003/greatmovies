@@ -61,7 +61,7 @@
 /* Small phones (300-400px) */
 @media (max-width: 400px) {
   .lucky-wheel-btn {
-    padding: 8px 8px !important;
+    padding: 6px 8px !important;
     font-size: 0.8rem !important;
   }
 }
