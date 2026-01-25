@@ -40,3 +40,28 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Lucky Wheel Button Styles */
+.lucky-wheel-btn {
+  background-color: #48a24bd6 !important;
+  border-color: #48a24bd6 !important;
+  color: white !important;
+  transition: all 0.3s ease !important;
+  padding: 8px 18px !important;
+  font-size: 0.95rem !important;
+}
+
+.lucky-wheel-btn:hover {
+  background-color: #388E3C !important;
+  border-color: #388E3C !important;
+  transform: scale(1.05) !important;
+  color: white !important;
+}
+
+/* Small phones (300-400px) */
+@media (max-width: 400px) {
+  .lucky-wheel-btn {
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+  }
+}
